@@ -1,0 +1,27 @@
+schema_version: "1.0"
+name: 10-audit-reports-without-editing
+description: /reuse-audit finds the duplicated formatDate and edits nothing.
+tags: [command]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "/reusable-dev:reuse-audit src"
+  max_turns: 30
+  allowed_tools: [Read, Glob, Grep, Bash, Agent, Edit, Write]
+graders:
+  - type: regex
+    name: finds-format-date-duplicate
+    pattern: "formatDate[\\s\\S]*(OrdersPage|InvoicesPage)"
+  - type: tool_used
+    name: no-edits
+    tool: Edit
+    min: 0
+    max: 0
+  - type: tool_used
+    name: no-writes
+    tool: Write
+    min: 0
+    max: 0
+  - type: llm
+    name: prioritized-and-asks
+    criteria: "The final message lists findings ordered by impact (highest first) and ends by asking the user which findings to act on."
