@@ -1,0 +1,16 @@
+schema_version: "1.0"
+name: 00-harness-smoke
+description: Fixture copy works and node-ts tests run inside the eval workspace.
+tags: [harness]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Run `node --test` in the current directory and tell me the pass and fail counts."
+  max_turns: 5
+  allowed_tools: [Bash, Read]
+runs: 1
+graders:
+  - type: regex
+    name: tests-pass
+    target: trace
+    pattern: "# pass 3"
