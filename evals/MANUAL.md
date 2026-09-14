@@ -23,5 +23,5 @@ The fixture has no dependencies installed and all `commands` empty, so every tie
 
 ## Results
 
-| Date | Claude Code | superpowers | M1 | M2 | M3 | M4 | M5 | M6a | M6b | Notes |
-|---|---|---|---|---|---|---|---|---|---|---|
+| Date | Claude Code | superpowers | M1 | M2 | M3 | M4 | M5 | M6a | M6b | M7 | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|---|

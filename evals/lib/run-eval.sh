@@ -30,9 +30,10 @@ if [[ -e "$stash" ]]; then
 fi
 
 if [[ -e "$docker_dir" ]]; then
-  mv "$docker_dir" "$stash"
+  # Traps first: restore() is a no-op until the stash exists.
   trap restore EXIT
   trap 'exit 130' INT TERM HUP
+  mv "$docker_dir" "$stash"
 fi
 
 cd "$(dirname "$0")/../.."
