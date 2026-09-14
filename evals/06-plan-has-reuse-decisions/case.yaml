@@ -1,0 +1,22 @@
+schema_version: "1.0"
+name: 06-plan-has-reuse-decisions
+description: An implementation plan includes a Reuse decision line for each code task.
+tags: [behavior, plan]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Don't write code yet. Write an implementation plan to docs/plan.md for adding a customers list page with a table of customers (name, email, signup date) and a Delete button per row. Break it into numbered tasks."
+  max_turns: 30
+  allowed_tools: [Read, Glob, Grep, Write, Skill]
+graders:
+  - type: file_exists
+    name: plan-written
+    path: docs/plan.md
+  - type: regex
+    name: has-reuse-decisions
+    target: { source: file, path: docs/plan.md }
+    pattern: "(Reuse decision:[\\s\\S]*){3}"
+  - type: llm
+    name: decisions-name-existing-units
+    criteria: "docs/plan.md reuses DataTable (src/shared/ui/DataTable.tsx) for the table, extends Button with a destructive/danger variant for Delete, and extracts formatDate to shared for the signup date. Each of these appears in a 'Reuse decision:' line."
+    focus: { source: file, path: docs/plan.md }
