@@ -14,7 +14,7 @@ Next.js App Router + React 19.
 ## Paths
 - Primitives and patterns: `src/shared/ui` (or `components/` in src-less projects); hooks: `src/shared/hooks`; pure helpers/domain: `src/shared/lib`.
 - Server vs client: every component is a Server Component by default. Mark `"use client"` at the top of the leaf file that needs interactivity (state, effects, event handlers) — never at a barrel or shared-module level. Keep shared primitives server-compatible when possible.
-- Data fetching: in Server Components (async components), route handlers (`app/**/route.ts`), or Server Actions — never inside shared UI (C2).
+- Data fetching: in Server Components (async components) or route handlers (`app/**/route.ts`) — never inside shared UI (C2). Server Actions/Functions are for mutations, not data fetching (nextjs.org/docs; react.dev/reference/react/server-functions).
 - Colocation: `app/` holds route segments; non-routable files colocate with `_folder` (private) or live outside `app/` (`src/shared/ui`). Use `src/` consistently or not at all.
 
 ## Component idioms
@@ -29,7 +29,7 @@ function Button({ variant = 'default', size = 'md', ...props }: ButtonProps) {
 }
 // <Button variant="destructive">Delete</Button>       — C4: children, no label prop
 ```
-- C5 ref: React 19 — `ref` is a regular prop for function components; `forwardRef` is no longer needed and is deprecated (react.dev React 19 release notes). Reach the root via `...props` spread.
+- C5 ref: React 19 — `ref` is a regular prop for function components; `forwardRef` is no longer needed. It is not deprecated yet: react.dev says it "will be deprecated in a future release" (react.dev/reference/react/forwardRef). Reach the root via `...props` spread.
 - C6 controlled: `value` + `onChange` (`ComponentPropsWithRef<'input'>` names). Uncontrolled: `defaultValue` + `ref`. A shared input supports both — accept both props, forward what is set.
 - Multi-root or wrapped-root components must spread rest props explicitly; React has no automatic attribute fallthrough.
 
@@ -41,9 +41,10 @@ export class NotFoundError extends Error {
   constructor(id: string) { super(`resource ${id} not found`); }
 }
 ```
+- F6 result style (`error_style: result`): return `{ ok: true, value } | { ok: false, error }` — pick ONE per config error_style, never mix.
 
 ## Testing
-- Vitest + @testing-library/react (`render`, `screen`, `userEvent`).
+- Vitest + @testing-library/react (`render`, `screen`); `userEvent` comes from `@testing-library/user-event`.
 - One file: `npx vitest run path/to/file.test.tsx` (`vitest run` = no watch; a filename substring filter also works).
 - Defaults: `npm test` = `vitest run`; component tests colocate as `Button.test.tsx` or live in `__tests__/`.
 

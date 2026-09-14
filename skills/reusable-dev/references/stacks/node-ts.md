@@ -45,7 +45,7 @@ export class NotFoundError extends Error {
 
 ## Testing
 - Vitest (preferred): one file `npx vitest run src/domain/money.test.ts` (substring filter also works; `vitest run` = no watch). Default suite: `vitest run`.
-- Node built-in runner (zero deps): `node --test` runs `**/*.test.{cjs,mjs,js,ts}` (TS matched when type stripping is on); one file: `node --test src/domain/money.test.ts` (nodejs.org/api/test).
+- Node built-in runner (zero deps): `node --test` runs `**/*.test.{cjs,mjs,js,ts}`; one file: `node --test src/domain/money.test.ts` (nodejs.org/api/test). Caveat: `node --test file.ts` supports only erasable TypeScript syntax — no enums, parameter properties, or namespaces with runtime code (`ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX`), and imports need explicit `.ts` extensions (nodejs.org/api/typescript). If the code uses those features, run tests via `commands.test` instead (e.g. Vitest).
 
 ## Stack-specific anti-patterns
 - Services importing HTTP request/response objects — parse in the handler, pass plain data.

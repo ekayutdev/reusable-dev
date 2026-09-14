@@ -8,7 +8,7 @@ SvelteKit 2 + Svelte 5 runes.
 
 ## Reuse units
 - UI component: `src/lib/components/Button.svelte` (PascalCase).
-- Stateful logic: runes module `src/lib/utils.svelte.ts` / `useDebouncedValue.svelte.ts` — `.svelte.ts` files may use `$state`, `$derived`, `$effect` (svelte.dev/docs, svelte-js-files).
+- Stateful logic: runes module `src/lib/cart.svelte.ts` / `useDebouncedValue.svelte.ts` — `.svelte.ts` files may use `$state`, `$derived`, `$effect` (svelte.dev/docs, svelte-js-files). Name by domain, never a catch-all `utils.*` (F8).
 - Pure function/domain: plain `.ts` module `src/lib/money.ts` (no runes needed).
 
 ## Paths
@@ -20,21 +20,22 @@ SvelteKit 2 + Svelte 5 runes.
 ```svelte
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  // C3 variant enum + C6 bindable + C4 children snippet + C5 rest props
-  interface Props {
+  import type { HTMLButtonAttributes } from 'svelte/elements';
+  // C3 variant enum + C6 bindable + C4 children snippet + C5 rest props + ref
+  interface Props extends HTMLButtonAttributes {
     variant?: 'default' | 'destructive';
     size?: 'sm' | 'md';
     children?: Snippet;              // C4: implicit children snippet
-    value?: string;                  // C6: parent may bind value or pass plain prop
+    ref?: HTMLButtonElement | null;  // C5: bindable ref to the root element
   }
-  let { variant = 'default', size = 'md', children, value = $bindable(''), ...props }: Props = $props();
+  let { ref = $bindable(null), variant = 'default', size = 'md', children, ...rest }: Props = $props();
 </script>
 
-<button data-variant={variant} {...props}>  <!-- C5: rest props spread to root -->
-  {@render children?.()}                     <!-- C4 -->
+<button bind:this={ref} {...rest} data-variant={variant}>  <!-- C5 -->
+  {@render children?.()}                                  <!-- C4 -->
 </button>
 ```
-- C5: spread unknown attrs with `{...props}` on the root element (no automatic fallthrough in Svelte 5 when you use rest props; use rest props in every wrapper). Ref/instance: `bind:this={ref}` on the component; exported functions from `<script>` (instance exports) are callable on that ref (`export function empty() {}` — svelte.dev/docs/svelte/bind).
+- C5: Svelte has NO attribute fallthrough — attributes reach an element only through an explicit rest spread. Extend `Props` from `HTMLButtonAttributes` (svelte/elements) so `...rest` accepts native attributes (svelte.dev/docs/svelte/typescript). C5 ref: the bindable `ref` pattern above forwards the root DOM element — parent writes `<Button bind:ref={el}>`. Secondary: `bind:this` on a component gives its instance — exported functions from `<script>` (instance exports, `export function empty() {}`) are callable on that ref (svelte.dev/docs/svelte/bind).
 - C6: controlled = parent binds `bind:value` to a `$bindable()` prop; uncontrolled = parent passes a plain prop, the `$bindable()` fallback value acts as the default. There is no separate default-value prop — use the `$bindable()` fallback.
 - C4: snippets replace slots — `{#snippet name(arg)}…{/snippet}` passed as props, `{@render children?.()}` to render; implicit `children` snippet covers the old default slot.
 
@@ -46,13 +47,15 @@ export class NotFoundError extends Error {
   constructor(id: string) { super(`resource ${id} not found`); }
 }
 ```
+- F6 result style (`error_style: result`): return `{ ok: true, value } | { ok: false, error }` — pick ONE per config error_style, never mix.
 
 ## Testing
-- Vitest + `@testing-library/svelte` (`render`, `screen`).
-- One file: `npx vitest run path/to/file.test.ts` (substring filter also works; `vitest run` = no watch).
+- Vitest + `@testing-library/svelte` (`render`, `screen`); `userEvent` from `@testing-library/user-event`.
+- Tests that use runes must have `.svelte` in the filename (e.g. `counter.svelte.test.ts`) — Vitest then processes them like source files (svelte.dev/docs/svelte/testing). Component tests need a DOM environment — `environment: 'jsdom'` in the Vitest config (or a `// @vitest-environment jsdom` file comment) — and `resolve.conditions: ['browser']` so packages resolve their browser entry points.
+- One file, either kind: `npx vitest run counter.svelte.test.ts` / `npx vitest run Button.test.ts` (substring filter also works; `vitest run` = no watch).
 
 ## Stack-specific anti-patterns
-- Stores for local state in Svelte 5 code — use `$state`/`$derived` runes; stores are for cross-app state only.
+- Stores for local state in Svelte 5 code — use `$state`/`$derived` runes; shared reactive state can be `$state` in a `.svelte.ts` module; stores remain for async streams/manual subscription control.
 - Fetching in components — use `load` in `+page.server.ts`/`+page.ts`.
 - Importing `$lib/server` from client code — it is server-only by design.
 - Old `on:click`/`slot` syntax in new components — Svelte 5 uses `onclick=` and snippets.
