@@ -1,0 +1,20 @@
+schema_version: "1.0"
+name: 08b-config-present-no-questions
+description: With config present, no setup questions are asked.
+tags: [behavior, config]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add an outline 'Edit' button to CustomerCard that calls an onEdit prop."
+  max_turns: 25
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill, AskUserQuestion]
+graders:
+  - type: tool_used
+    name: no-questions
+    tool: AskUserQuestion
+    min: 0
+    max: 0
+  - type: regex
+    name: uses-outline-button
+    target: { source: file, path: src/features/customers/CustomerCard.tsx }
+    pattern: "variant=[\"'{]+outline"

@@ -1,0 +1,19 @@
+schema_version: "1.0"
+name: 08a-no-config
+description: Without config in a non-interactive run, detect values, do not write config, note it, and still do the work.
+tags: [behavior, config]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a red Delete button to CustomerCard that calls an onDelete prop."
+  max_turns: 30
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: still-extends-button
+    target: { source: file, path: src/components/ui/button.tsx }
+    pattern: "(destructive|danger)\\s*:"
+  - type: llm
+    name: detected-and-noted
+    criteria: "Either (a) the final message's Notes say the config was not saved and suggest /reusable-dev:reuse-setup, or (b) a .claude/reusable-dev.md file was created containing stack: react-next and ui_lib: shadcn-react. Pass if (a) or (b) is true."
+    focus: trace

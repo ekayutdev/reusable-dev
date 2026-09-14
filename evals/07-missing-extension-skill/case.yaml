@@ -1,0 +1,23 @@
+schema_version: "1.0"
+name: 07-missing-extension-skill
+description: A configured but missing extension skill falls back without stopping.
+tags: [behavior, fallback]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a shared function roundToCents(amount: number): number next to formatCurrency, and use it in invoiceTotal before formatting."
+  max_turns: 35
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: function-added
+    target: { source: file, path: src/shared/lib/money.ts }
+    pattern: "export function roundToCents"
+  - type: regex
+    name: notes-fallback
+    pattern: "nonexistent-plugin:super-tdd[^\\n]*(not installed|fallback)"
+    flags: i
+  - type: regex
+    name: tests-ran-green
+    target: trace
+    pattern: "(#|ℹ) fail 0"

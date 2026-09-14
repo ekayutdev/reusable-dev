@@ -1,0 +1,35 @@
+schema_version: "1.0"
+name: 05-shared-signature-call-sites
+description: Changing a shared function's signature runs and passes call-site tests (T3).
+tags: [behavior, verify]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Change formatCurrency to take an options object: formatCurrency(amount, { currency, locale }) where locale defaults to en-US."
+  max_turns: 35
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: signature-has-options
+    target: { source: file, path: src/shared/lib/money.ts }
+    pattern: "locale"
+  - type: regex
+    name: orders-call-site-updated
+    target: { source: file, path: src/features/orders/order-summary.ts }
+    pattern: "formatCurrency\\([\\s\\S]*?\\{\\s*currency"
+  - type: regex
+    name: invoices-call-site-updated
+    target: { source: file, path: src/features/invoices/invoice-total.ts }
+    pattern: "formatCurrency\\([\\s\\S]*?\\{\\s*currency"
+  - type: regex
+    name: tests-ran-green
+    target: trace
+    pattern: "(#|ℹ) fail 0"
+  - type: regex
+    name: reports-t3
+    pattern: "T3[^\\n]*(2 call sites|call sites?)"
+    flags: i
+  - type: regex
+    name: registry-api-updated
+    target: { source: file, path: docs/reuse-registry.md }
+    pattern: "formatCurrency[^\\n]*locale"
