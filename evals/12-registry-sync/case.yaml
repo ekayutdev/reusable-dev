@@ -16,7 +16,7 @@ graders:
   - type: regex
     name: in-functions-section
     target: { source: file, path: docs/reuse-registry.md }
-    pattern: "## Functions · Domain[\\s\\S]*formatDate"
+    pattern: "## Functions · Domain\\n[^#]*formatDate"
   - type: regex
     name: datatable-kept
     target: { source: file, path: docs/reuse-registry.md }

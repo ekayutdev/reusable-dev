@@ -11,11 +11,11 @@ execution:
 graders:
   - type: regex
     name: t1-skipped
-    pattern: "T1[^\\n]*skipped"
+    pattern: "T1[^·\\n]*skipped"
     flags: i
   - type: regex
     name: t4-skipped
-    pattern: "T4[^\\n]*skipped"
+    pattern: "T4[^·\\n]*skipped"
     flags: i
   - type: regex
     name: no-false-pass
