@@ -1,0 +1,23 @@
+schema_version: "1.0"
+name: 12-registry-sync
+description: /reuse-registry --sync adds rows for unregistered shared exports.
+tags: [command]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "/reusable-dev:reuse-registry --sync  (non-interactive: apply the diff)"
+  max_turns: 30
+  allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
+graders:
+  - type: regex
+    name: format-date-row
+    target: { source: file, path: docs/reuse-registry.md }
+    pattern: "\\|\\s*formatDate\\s*\\|\\s*src/shared/lib/format-date\\.ts"
+  - type: regex
+    name: in-functions-section
+    target: { source: file, path: docs/reuse-registry.md }
+    pattern: "## Functions · Domain[\\s\\S]*formatDate"
+  - type: regex
+    name: datatable-kept
+    target: { source: file, path: docs/reuse-registry.md }
+    pattern: "\\|\\s*DataTable\\s*\\|"

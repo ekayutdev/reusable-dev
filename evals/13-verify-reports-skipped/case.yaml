@@ -1,0 +1,23 @@
+schema_version: "1.0"
+name: 13-verify-reports-skipped
+description: /reuse-verify with no configured commands reports every tier as skipped, never as passed.
+tags: [command]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "/reusable-dev:reuse-verify"
+  max_turns: 20
+  allowed_tools: [Read, Glob, Grep, Bash]
+graders:
+  - type: regex
+    name: t1-skipped
+    pattern: "T1[^\\n]*skipped"
+    flags: i
+  - type: regex
+    name: t4-skipped
+    pattern: "T4[^\\n]*skipped"
+    flags: i
+  - type: regex
+    name: no-false-pass
+    pattern: "T[1-4][^\\n]*✓"
+    match: not_contains
