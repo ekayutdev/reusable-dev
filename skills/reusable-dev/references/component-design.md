@@ -1,6 +1,6 @@
 # Component design rules
 
-Principles → checkable rules → anti-patterns → example. Stack syntax lives in `stacks/<stack>.md`; ui-lib specifics in `ui-libs/<ui_lib>.md`.
+Principles → checkable rules → anti-patterns → example. Stack syntax lives in `stacks/<stack>.md` (or the project's `.claude/reusable-dev/stacks/<stack>.md`); ui-lib specifics in `ui-libs/<ui_lib>.md`.
 
 ## Layers
 

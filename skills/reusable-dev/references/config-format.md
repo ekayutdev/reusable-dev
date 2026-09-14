@@ -4,9 +4,9 @@ Committed to git so the whole team shares one convention. YAML frontmatter + fre
 
 ```yaml
 ---
-stack: react-next            # one of references/stacks/*.md names, or a path map for monorepos:
+stack: react-next            # react-next | vue-nuxt | sveltekit | node-ts, or an ecosystem name (go | python | php, no reference file), or a path map for monorepos:
 # stack: { "apps/web": react-next, "apps/api": node-ts }
-ui_lib: shadcn-react         # one of references/ui-libs/*.md names, or ""
+ui_lib: shadcn-react         # shadcn-react | shadcn-vue | shadcn-svelte | ""
 shared_paths:
   components: src/shared/ui  # "" if the project has no UI
   functions: src/shared/lib
@@ -44,7 +44,7 @@ skills:                      # optional extension points; [] = built-in fallback
 | package.json `scripts` named `typecheck`/`type-check`, `lint`, `test`, `build`, `e2e`/`test:e2e` | `commands.*` = `<pm> run <script>` using the lockfile's package manager |
 | Multiple `apps/*` or `packages/*` with different signals | path map for `stack` |
 
-Shared paths: prefer existing dirs in this order — `src/shared/ui`, `src/components/shared`, `src/components/common`, `packages/ui/src` for components; `src/shared/lib`, `src/lib`, `packages/shared/src` for functions. Ignore the ui-lib primitives dir (`components/ui`) — it is covered by `ui_lib`.
+A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (written by `/reusable-dev:reuse-setup`); the skill reads that location too. Shared paths: prefer existing dirs in this order — `src/shared/ui`, `src/components/shared`, `src/components/common`, `packages/ui/src` for components; `src/shared/lib`, `src/lib`, `packages/shared/src` for functions. Ignore the ui-lib primitives dir (`components/ui`) — it is covered by `ui_lib`.
 
 ## Missing config (skill step 0)
 

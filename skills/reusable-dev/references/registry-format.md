@@ -1,4 +1,4 @@
-# Registry format — `docs/reuse-registry.md`
+# Registry format — default `docs/reuse-registry.md` (config `registry`)
 
 One row per reusable unit so a single `grep -i <term>` returns path, API, and usage. Committed to git.
 

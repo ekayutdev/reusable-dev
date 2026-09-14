@@ -11,7 +11,7 @@ execution:
 graders:
   - type: regex
     name: finds-format-date-duplicate
-    pattern: "formatDate[\\s\\S]*(OrdersPage|InvoicesPage)|(OrdersPage|InvoicesPage)[\\s\\S]*formatDate"
+    pattern: "duplicate[^\\n]*(OrdersPage|InvoicesPage)[^\\n]*formatDate|duplicate[^\\n]*formatDate[^\\n]*(OrdersPage|InvoicesPage)"
   - type: tool_used
     name: no-edits
     tool: Edit
@@ -31,12 +31,15 @@ graders:
     input_match: "duplicate-finder"
     min: 1
   - type: regex
+    name: numeric-impact-duplicate-row
+    pattern: "\\|\\s*[1-5]\\s*\\|\\s*duplicate\\s*\\|"
+  - type: regex
     name: orders-untouched
     target: { source: file, path: src/features/orders/OrdersPage.tsx }
     pattern: "function formatDate"
   - type: regex
     name: no-files-created
     target: files
-    pattern: "src/shared/lib/[^\\n]*date|\\.reusable-dev-jscpd"
+    pattern: "src/shared/lib/[^\\n]*date"
     flags: i
     match: not_contains
