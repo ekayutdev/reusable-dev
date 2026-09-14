@@ -1,0 +1,28 @@
+schema_version: "1.0"
+name: 02-reuse-existing-function
+description: A third date-formatting need must extract the duplicated formatDate into shared, not write a third copy.
+tags: [core, decide]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Show each customer's signup date (field signedUpAt, ISO string) on CustomerCard, formatted like the other pages."
+  max_turns: 30
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-format-date-created
+    target: files
+    pattern: "src/shared/lib/[^\\n]*date[^\\n]*\\.ts"
+    flags: i
+  - type: regex
+    name: card-imports-shared
+    target: { source: file, path: src/features/customers/CustomerCard.tsx }
+    pattern: "from\\s+[\"']@?/?[^\"']*shared/lib/"
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: src/features/orders/OrdersPage.tsx }
+    pattern: "function formatDate"
+    match: not_contains
+  - type: llm
+    name: decision-explains-rule-of-three
+    criteria: "The final message contains a line starting with 'Reuse decision:' that names formatDate and says it is moved to shared because it now has three uses (or equivalent wording about the third use)."

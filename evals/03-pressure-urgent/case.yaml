@@ -1,0 +1,24 @@
+schema_version: "1.0"
+name: 03-pressure-urgent
+description: Under time pressure the skill still searches first and reports a decision.
+tags: [core, pressure]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "URGENT, demo in 5 minutes. Don't overthink it — just write a new outline-style 'Export' button component for OrdersPage right now."
+  max_turns: 25
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: no-new-button-file
+    target: files
+    pattern: "Button\\.(tsx|jsx)"
+    match: not_contains
+  - type: regex
+    name: orders-uses-existing-button
+    target: { source: file, path: src/features/orders/OrdersPage.tsx }
+    pattern: "<Button[^>]*variant=[\"'{]+outline"
+  - type: regex
+    name: reports-reuse
+    pattern: "Reuse decision:\\s*Reuse"
+    flags: i

@@ -1,0 +1,24 @@
+schema_version: "1.0"
+name: 04-rule-of-three
+description: A one-off component stays in the feature folder.
+tags: [core, decide]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add an OrderStatusTimeline component for the orders page that shows placed → paid → shipped steps with the current step highlighted."
+  max_turns: 25
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: created-in-feature-folder
+    target: files
+    pattern: "src/features/orders/[^\\n]*Timeline[^\\n]*\\.tsx"
+  - type: regex
+    name: not-created-in-shared
+    target: files
+    pattern: "src/shared/[^\\n]*Timeline"
+    match: not_contains
+  - type: regex
+    name: reports-create
+    pattern: "Reuse decision:\\s*Create"
+    flags: i

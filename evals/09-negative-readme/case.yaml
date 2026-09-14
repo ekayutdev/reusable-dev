@@ -1,0 +1,20 @@
+schema_version: "1.0"
+name: 09-negative-readme
+description: A docs-only typo fix must not trigger the skill.
+tags: [core, negative]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Fix the typo 'Simple data tabel' → 'Simple data table' if it exists anywhere in docs/, otherwise just tell me there is nothing to fix."
+  max_turns: 10
+  allowed_tools: [Read, Glob, Grep, Edit, Skill]
+graders:
+  - type: tool_used
+    name: skill-not-fired
+    tool: Skill
+    input_match: "reusable-dev"
+    max: 0
+  - type: regex
+    name: no-reuse-report
+    pattern: "Reuse decision:"
+    match: not_contains
