@@ -31,7 +31,7 @@ graders:
     min: 1
   - type: regex
     name: reports-permission-or-config
-    pattern: "reusable-dev\\.md"
+    pattern: "reusable-dev\\.md[\\s\\S]*stack:\\s*react-next|stack:\\s*react-next[\\s\\S]*reusable-dev\\.md"
   - type: tool_used
     name: no-bash-config-workaround
     tool: Bash

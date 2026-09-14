@@ -32,7 +32,7 @@ Pick the FIRST option that works, and say why earlier options do not:
 ### 3. Design
 Load only what applies:
 - UI → `references/component-design.md`; logic → `references/function-design.md` (these rules always apply, also when a `design` skill is configured)
-- `references/stacks/<stack>.md` if present — when `stack` is a path map, use the entry whose path contains the file you are changing (unknown stack → general rules; Notes: `no stack reference for <stack> — /reusable-dev:reuse-setup can add one`)
+- `references/stacks/<stack>.md`, or the project's `.claude/reusable-dev/stacks/<stack>.md`, if present — when `stack` is a path map, use the entry whose path contains the file you are changing (unknown stack → general rules; Notes: `no stack reference for <stack> — /reusable-dev:reuse-setup can add one`)
 - `references/ui-libs/<ui_lib>.md` if `ui_lib` is set
 - Extension points `design`, `test` → `references/integration.md`
 New or changed shared unit → write its test first.
