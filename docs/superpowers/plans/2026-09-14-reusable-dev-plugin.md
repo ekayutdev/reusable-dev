@@ -2000,7 +2000,7 @@ Expected: with-plugin arm 1.00.
 
 `claude plugin eval` cannot load plugins from outside this repo, so co-operation with superpowers is checked by hand before each release.
 
-Setup: a scratch copy of `evals/fixtures/react-shadcn`, superpowers installed and enabled, then start `claude --plugin-dir /Users/ekayut/Project/ai/claude-skill` in that copy.
+Setup: a scratch copy of `evals/fixtures/react-shadcn`, superpowers installed and enabled, then start `claude --plugin-dir <path-to-this-repo>` in that copy.
 
 | # | Do | Pass when |
 |---|---|---|
@@ -2034,12 +2034,12 @@ Expected: exit 0, no warnings.
 
 - [ ] **Step 2: Plugin structure review**
 
-Dispatch agent `plugin-dev:plugin-validator` with prompt: "Validate the Claude Code plugin at /Users/ekayut/Project/ai/claude-skill (manifest, skills, commands, agents). Report errors and warnings only."
+Dispatch agent `plugin-dev:plugin-validator` with prompt: "Validate the Claude Code plugin at <path-to-this-repo> (manifest, skills, commands, agents). Report errors and warnings only."
 Fix every error; fix warnings unless they contradict Global Constraints.
 
 - [ ] **Step 3: Skill review**
 
-Dispatch agent `plugin-dev:skill-reviewer` with prompt: "Review skills/reusable-dev/SKILL.md and its references in /Users/ekayut/Project/ai/claude-skill for trigger quality of the description, progressive disclosure, and clarity. Constraints that must stay: SKILL.md body ≤ 120 lines, references ≤ 150 lines, decision ladder Reuse → Extend → Compose → Create, tiers T1–T4, seven extension points, report prefixes 'Reuse decision:', 'Verified:', 'Notes:'."
+Dispatch agent `plugin-dev:skill-reviewer` with prompt: "Review skills/reusable-dev/SKILL.md and its references in <path-to-this-repo> for trigger quality of the description, progressive disclosure, and clarity. Constraints that must stay: SKILL.md body ≤ 120 lines, references ≤ 150 lines, decision ladder Reuse → Extend → Compose → Create, tiers T1–T4, seven extension points, report prefixes 'Reuse decision:', 'Verified:', 'Notes:'."
 Apply findings that do not break the listed constraints.
 
 - [ ] **Step 4: Token cost check**
@@ -2135,7 +2135,7 @@ Manual checks with superpowers: `evals/MANUAL.md`
 
 Run in a scratch copy:
 ```bash
-S=$(mktemp -d) && cp -R evals/fixtures/node-ts/. "$S" && cd "$S" && claude --plugin-dir /Users/ekayut/Project/ai/claude-skill -p "Add a shared function percentOf(part: number, whole: number): number next to formatCurrency with a test" --allowedTools "Read,Glob,Grep,Edit,Write,Bash,Skill"; cd -
+S=$(mktemp -d) && cp -R evals/fixtures/node-ts/. "$S" && cd "$S" && claude --plugin-dir <path-to-this-repo> -p "Add a shared function percentOf(part: number, whole: number): number next to formatCurrency with a test" --allowedTools "Read,Glob,Grep,Edit,Write,Bash,Skill"; cd -
 ```
 Expected: output ends with `Reuse decision:` and `Verified:` lines showing T2 test counts from `node --test`.
 
@@ -2148,4 +2148,4 @@ git commit -m "docs: add README with usage, commands, and install"
 
 - [ ] **Step 4: Ask the user about distribution**
 
-Ask whether to add `reusable-dev` to the existing local marketplace at `/Users/ekayut/Project/ekayutdev-plugins` (it uses `"source": "./plugins/<name>"`, so this means copying or symlinking the plugin there and adding an entry). Do not modify that repo without a yes.
+Ask whether to add `reusable-dev` to the existing local marketplace at `<local-marketplace-repo>` (it uses `"source": "./plugins/<name>"`, so this means copying or symlinking the plugin there and adding an entry). Do not modify that repo without a yes.

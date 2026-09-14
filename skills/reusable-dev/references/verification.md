@@ -24,7 +24,7 @@ Report only what you ran, with the real result. A tier with no command is `skipp
 Verified: T1 typecheck ✓ lint skipped (no command) · T2 4 tests ✓ · T3 2 call sites, 3 tests ✓
 ```
 Failure: `T2 1 failing (money.test.ts: formats USD)` and stop to debug — do not claim done.
-Not applicable: `T3 n/a (no shared unit changed)`. Non-shared touched unit without tests: `T2 no tests for <path>`. A shared unit without a test is not done — go back to step 3 (test first).
+Not applicable: `T3 n/a (no shared unit changed)`. Non-shared touched unit without tests: `T2 no tests for <path>`. A shared unit without a test is not done — go back to step 3 (test first). If `commands.test` is empty, still write the test, report `T2 skipped (no command)`, and add `test written but not run` to Notes.
 Tiers after a stop: `not run (stopped at Tn)`.
 
 ## Built-in fallbacks (used when the extension point is empty or its skill is missing)

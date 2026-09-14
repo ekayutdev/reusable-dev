@@ -6,7 +6,7 @@ context:
   scaffold_script: setup.sh
 execution:
   prompt: "Add an OrderStatusTimeline component for the orders page that shows placed → paid → shipped steps with the current step highlighted."
-  max_turns: 25
+  max_turns: 35
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
   - type: regex

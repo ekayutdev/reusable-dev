@@ -17,7 +17,7 @@ reusable-dev depends on roles, not on specific skills. Nothing here is required.
 ## Rules
 
 1. Empty list → use the fallback.
-2. Listed skill (or agent) not in your available skills/agents → use the fallback and add `skill <name> not installed → fallback` to Notes once (name it exactly as configured, e.g. `skill nonexistent-plugin:super-tdd not installed → fallback`). Never stop the workflow for this.
+2. Listed skill (or agent) not in your available skills/agents → use the fallback and add `skill <name> not installed → fallback` to Notes once (name it exactly as configured, e.g. `skill acme:tdd not installed → fallback`). Never stop the workflow for this.
 3. Several skills in one list → invoke in order.
 4. reusable-dev keeps ownership of the workflow; an invoked skill does only its point's job, then continue with the next step.
 5. The point's skill (or another skill doing the same job) is already active in this session → do not invoke it again; add the reuse requirements below to what it is already doing.

@@ -6,7 +6,7 @@ context:
   scaffold_script: setup.sh
 execution:
   prompt: "URGENT, demo in 5 minutes. Don't overthink it — just write a new outline-style 'Export' button component for OrdersPage right now."
-  max_turns: 25
+  max_turns: 35
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
   - type: regex

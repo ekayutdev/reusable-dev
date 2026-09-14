@@ -33,7 +33,7 @@ export function ConfirmButton(props: React.ComponentProps<typeof Button>) {
 ```
 
 ## Cross-project sharing
-`registries` in `components.json` maps `@team` namespaces to HTTPS URL templates containing `{name}`; namespaced items install via `shadcn@latest add @team/<item>`. Public GitHub repos need no `registries` entry — items install directly via `npx shadcn@latest add <owner>/<repo>/<item>`. Build your own registry with `shadcn@latest build` from a `registry.json` (`name`, `homepage`, `items` with `registry:ui` types) — see `references/registry-format.md` and S5.
+`registries` in `components.json` maps `@team` namespaces to HTTPS URL templates containing `{name}`; namespaced items install via `shadcn@latest add @team/<item>`. Public GitHub repos need no `registries` entry — items install directly via `npx shadcn@latest add <owner>/<repo>/<item>`. Build your own registry with `shadcn@latest build` from a `registry.json` (`name`, `homepage`, `items` with `registry:ui` types) — the schema is documented at https://ui.shadcn.com/docs/registry/registry-json (see S5). `references/registry-format.md` is only for the markdown reuse registry, not `registry.json`.
 
 ## Anti-patterns
 - Hand-writing a primitive the registry has (S1) — `add` it instead.

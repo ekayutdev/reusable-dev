@@ -14,8 +14,9 @@ The prompt gives: scan path(s), `shared_paths`, `ui_lib`, `stack`, and the absol
 ## Procedure
 1. Read `component-design.md`, `function-design.md`, and (if `ui_lib` starts with `shadcn`) `ui-libs/shadcn-core.md` from the references directory.
 2. Duplicates:
-   - If `npx --no-install jscpd --version` succeeds, run `npx --no-install jscpd --min-lines 5 --reporters json --output "${TMPDIR:-/tmp}/reusable-dev-jscpd" <paths>` and read the JSON, then delete the `${TMPDIR:-/tmp}/reusable-dev-jscpd` directory.
+   - If `npx --no-install jscpd --version` succeeds, run `OUT=$(mktemp -d "${TMPDIR:-/tmp}/reusable-dev-jscpd.XXXXXX")`, then `npx --no-install jscpd --min-lines 5 --reporters json --output "$OUT" <paths>`, read the JSON in `$OUT`, and finally `rm -rf "$OUT"`.
    - Otherwise grep for function/component declarations (`function \w+`, `const \w+ = (`, `export default`), group identical names across files, and read those declarations to compare bodies. Also grep for identical literal-heavy lines (format strings, regexes, URLs) appearing in 2+ files.
+   - A duplicate with 2 copies is worded: `Extract <name> to shared (2 copies — extract now only if the user picks this finding; otherwise at the third use)`.
 3. Rule violations: check each rule (use the "How to check" column where the table has one; for S1–S5 use the rule text) against files under the scan paths (C1–C8 for UI files, F1–F8 for logic files, S1–S5 when shadcn).
 4. Untested shared units: every export under `shared_paths` without a colocated `*.test.*`/`*.spec.*`.
 5. Hand-written primitives (shadcn only): components outside `components/ui` whose exported name equals a known shadcn primitive name exactly (e.g. `Button`, not `CustomerCard`) (Button, Input, Dialog, Select, Table, Card, Badge, Tabs, Tooltip, Dropdown Menu, Checkbox, Switch, Textarea, Label, Sheet, Popover).

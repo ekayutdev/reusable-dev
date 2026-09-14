@@ -8,12 +8,6 @@ set -euo pipefail
 docker_dir="$HOME/.docker"
 stash="$HOME/.docker.eval-stash"
 
-if [[ -e "$stash" ]]; then
-  echo "run-eval: $stash exists — an earlier run did not restore it." >&2
-  echo "run-eval: restore it first: mv \"$stash\" \"$docker_dir\"" >&2
-  exit 1
-fi
-
 restore() {
   [[ -e "$stash" ]] || return 0
   if [[ -e "$docker_dir" ]]; then
@@ -22,6 +16,18 @@ restore() {
   fi
   mv "$stash" "$docker_dir"
 }
+
+if [[ "${1:-}" == "--restore" ]]; then
+  restore
+  exit 0
+fi
+
+if [[ -e "$stash" ]]; then
+  echo "run-eval: $stash exists — an earlier run did not restore it." >&2
+  echo "run-eval: run evals/lib/run-eval.sh --restore to put it back" >&2
+  echo "run-eval: this is unsafe while another eval is running" >&2
+  exit 1
+fi
 
 if [[ -e "$docker_dir" ]]; then
   mv "$docker_dir" "$stash"

@@ -19,6 +19,7 @@ The fixture has no dependencies installed and all `commands` empty, so every tie
 | M5 | Disable superpowers; in a fresh copy with Setup step 2 applied, ask "add a customers page with a delete button per row" (coding, not planning) | Work completes with `Reuse decision:` lines; no errors about missing skills; `Notes:` has `skill <name> not installed → fallback` once per configured superpowers skill it reached |
 | M6a | Fresh copy, `rm .claude/reusable-dev.md`, run `/reusable-dev:reuse-setup`, deny the write prompt | The full config is printed in a fenced block with the path to save it; no Bash/Edit retry |
 | M6b | Fresh copy, `rm .claude/reusable-dev.md`, ask "add a delete button to CustomerCard", deny any write prompt for the config | No retry through another tool; the button work continues; Notes contain exactly `config not saved — run /reusable-dev:reuse-setup` |
+| M7 | Fresh copy, `rm .claude/reusable-dev.md`, ask "add a delete button to CustomerCard", answer the setup questions, allow the write; then start a new session and ask "add an edit button to CustomerCard" | First session asks once and writes `.claude/reusable-dev.md`; second session asks no setup questions |
 
 ## Results
 

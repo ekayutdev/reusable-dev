@@ -6,7 +6,7 @@ context:
   scaffold_script: setup.sh
 execution:
   prompt: "Add a red Delete button to CustomerCard that calls an ondelete prop."
-  max_turns: 25
+  max_turns: 35
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
   - type: regex

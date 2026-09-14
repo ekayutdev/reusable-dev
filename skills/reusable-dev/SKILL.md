@@ -28,6 +28,8 @@ Pick the FIRST option that works, and say why earlier options do not:
 2. **Extend** — add an optional prop/parameter (or variant) with a default; existing call sites unchanged.
 3. **Compose** — build a new unit from existing ones.
 4. **Create** — new unit. First or second use → feature folder. Third use (two copies found, a third needed) → extract to shared, replace every copy, report as Create with "third use" (Rule of Three). A unit inside another feature folder is a copy, never a Reuse target.
+- User explicitly names where the unit goes → follow it; if that breaks the Rule of Three, add a `Notes:` line saying so.
+- A finding the user picked from `/reusable-dev:reuse-audit` may extract two identical copies to shared now (report as Create — audit request).
 
 ### 3. Design
 Load only what applies:
@@ -38,7 +40,7 @@ Load only what applies:
 New or changed shared unit → write its test first.
 
 ### 4. Verify
-Run T1–T3 per `references/verification.md` (extension points `verify`, `debug`). Never report a tier you did not run.
+Run T1–T3 per `references/verification.md` (extension points `verify`, `debug`). Never print ✓ for a tier you did not run.
 
 ### 5. Register
 Created a shared unit or changed a shared API → update its registry row (`references/registry-format.md`). Changed a shared API → extension point `review`.

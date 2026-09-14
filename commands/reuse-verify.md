@@ -1,7 +1,7 @@
 ---
 description: Run the full verification ladder T1–T4 for current changes and report real results
 argument-hint: "[path or 'all']"
-allowed-tools: ["Read", "Glob", "Grep", "Bash", "Skill"]
+allowed-tools: ["Read", "Glob", "Grep", "Bash", "Skill", "Agent"]
 ---
 
 # Reuse verify

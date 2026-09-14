@@ -37,7 +37,7 @@ skills:                      # optional extension points; [] = built-in fallback
 | `nuxt.config.*` or `"nuxt"` / `"vue"` in deps | `stack: vue-nuxt` |
 | `svelte.config.*` or `"@sveltejs/kit"` in deps | `stack: sveltekit` |
 | `"react"` in deps without next | `stack: react-next` |
-| `tsconfig.json` + server framework (`express`, `fastify`, `@nestjs/core`, `hono`) or no UI framework | `stack: node-ts` |
+| package.json with a server framework (`express`, `fastify`, `@nestjs/core`, `hono`) or no UI framework (tsconfig.json optional) | `stack: node-ts` |
 | `components.json` + react | `ui_lib: shadcn-react` |
 | `components.json` + vue | `ui_lib: shadcn-vue` |
 | `components.json` + svelte | `ui_lib: shadcn-svelte` |

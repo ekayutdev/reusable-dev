@@ -1,6 +1,6 @@
 schema_version: "1.0"
 name: 08a-no-config
-description: Without config in a non-interactive run, detect values, do not write config, note it exactly, and still do the work.
+description: Without config in a non-interactive run, detect values, do not write config, note it exactly, and still do the work. (config-file-not-created is a guard; the eval sandbox also denies .claude/** writes)
 tags: [behavior, config]
 context:
   scaffold_script: setup.sh

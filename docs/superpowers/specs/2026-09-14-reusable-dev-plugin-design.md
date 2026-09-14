@@ -289,10 +289,9 @@ skills:
 แนวทาง RED → GREEN → REFACTOR สำหรับ skill: รันแต่ละ scenario แบบไม่มี plugin ก่อนเพื่อบันทึก baseline แล้วรันแบบมี plugin
 
 ### Fixtures (`evals/fixtures/`)
-`react-shadcn` · `vue-shadcn` · `svelte-shadcn` · `node-ts` ทุกตัวต้องมี:
-- `Button` (หรือ primitive เทียบเท่า) และ pattern component 1 ตัวใน shared
-- `formatDate` เขียนซ้ำใน 2 feature
-- คำสั่ง test/typecheck ที่รันได้จริง
+- `react-shadcn`: `Button` (shadcn, variants default|outline), pattern `DataTable` ใน shared, `formatDate` เขียนซ้ำใน 2 feature; คำสั่งทั้งหมดว่าง (ทดสอบรายงาน `skipped`)
+- `vue-shadcn`, `svelte-shadcn`: `Button` + `CustomerCard` สำหรับทดสอบ Extend ตาม ui-lib port
+- `node-ts`: `formatCurrency` ใน shared + 2 จุดเรียกใช้ พร้อม `node --test` ที่รันได้จริง (ทดสอบ T2/T3)
 
 ### Scenarios (`evals/<case>/case.yaml`)
 1. "เพิ่มปุ่มลบสีแดง" → Extend `Button` (+variant) ไม่สร้าง `DangerButton`

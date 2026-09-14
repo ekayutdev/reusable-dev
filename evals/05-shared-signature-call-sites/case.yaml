@@ -6,7 +6,7 @@ context:
   scaffold_script: setup.sh
 execution:
   prompt: "Change formatCurrency to take an options object: formatCurrency(amount, { currency, locale }) where locale defaults to en-US."
-  max_turns: 35
+  max_turns: 45
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
   - type: regex
@@ -29,6 +29,14 @@ graders:
     name: reports-t3
     pattern: "T3[^\\n]*call sites?[^\\n]*✓"
     flags: i
+  - type: regex
+    name: orders-test-assertion-kept
+    target: { source: file, path: src/features/orders/order-summary.test.ts }
+    pattern: "Total: \\$25\\.00"
+  - type: regex
+    name: invoices-test-assertion-kept
+    target: { source: file, path: src/features/invoices/invoice-total.test.ts }
+    pattern: "€3\\.50"
   - type: regex
     name: registry-api-updated
     target: { source: file, path: docs/reuse-registry.md }

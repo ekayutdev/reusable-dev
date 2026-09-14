@@ -6,7 +6,7 @@ context:
   scaffold_script: setup.sh
 execution:
   prompt: "Add a red Delete button to CustomerCard that calls an onDelete prop."
-  max_turns: 25
+  max_turns: 35
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
   - type: regex
@@ -16,7 +16,7 @@ graders:
   - type: regex
     name: no-new-button-component
     target: files
-    pattern: "(Danger|Delete|Red)Button\\.(tsx|jsx)"
+    pattern: "(Danger|Delete|Red|Destructive)Button\\.(tsx|jsx)"
     match: not_contains
   - type: regex
     name: card-uses-button

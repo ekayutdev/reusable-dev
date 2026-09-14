@@ -6,7 +6,7 @@ context:
   scaffold_script: setup.sh
 execution:
   prompt: "Show each customer's signup date (field signedUpAt, ISO string) on CustomerCard, formatted like the other pages."
-  max_turns: 30
+  max_turns: 40
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
   - type: regex
