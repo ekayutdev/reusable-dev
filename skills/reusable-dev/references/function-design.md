@@ -12,7 +12,7 @@ Pure code never imports services or adapters. When frontend and backend share a 
 | ID | Rule | How to check |
 |---|---|---|
 | F1 | Business logic is a pure function: same input → same output, no IO, no clock, no randomness. | no `fetch`, db client, `Date.now()`, `Math.random()` in `lib/domain` files |
-| F2 | IO dependencies are parameters (or constructor args), not imports inside logic. | services receive clients; tests pass fakes |
+| F2 | IO dependencies (db, http, clock, randomness) are parameters or constructor args, not imports inside logic. | no db/http client imports in domain or service logic except type-only imports; services receive clients as arguments |
 | F3 | One responsibility; the name states intent (`calculateInvoiceTotal`, not `process`). | name is verb + noun; body ≤ ~40 lines |
 | F4 | ≤ 3 positional parameters; more → one options object with defaults. | signature check |
 | F5 | No boolean flag that switches behavior; split into two functions. | no `(…, isX: boolean)` that branches the whole body |
@@ -37,9 +37,13 @@ Pure code never imports services or adapters. When frontend and backend share a 
 // ✗ Before: IO + flag + positional sprawl
 export async function report(userId, from, to, format, includeTax) { const rows = await db.query(…); … }
 
-// ✓ After: pure core + injected IO + options object
-export function summarize(rows: Row[], opts: { includeTax?: boolean } = {}): Summary { … }
-export async function buildReport(deps: { db: Db }, q: { userId: string; from: Date; to: Date }) {
-  return summarize(await deps.db.rows(q));
+// ✓ After: pure core + injected IO + options object; the flag becomes two functions
+export function summarizeRows(rows: Row[]): Summary { … }
+export function summarizeRowsWithTax(rows: Row[], taxRate: number): Summary { … }
+export async function buildReport(
+  deps: { db: Db },
+  q: { userId: string; from: Date; to: Date; format: ReportFormat },
+): Promise<Report> {
+  return renderReport(summarizeRows(await deps.db.rows(q)), q.format);
 }
 ```
