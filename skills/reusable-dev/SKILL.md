@@ -52,7 +52,7 @@ Writing a design or implementation plan (with any planning skill or none): do Di
 ```
 Reuse decision: <Reuse|Extend|Compose|Create> <unit> (<path>) — <one-line why>
 Verified: T1 … · T2 … · T3 …   (a tier that does not apply: `T3 n/a (no shared unit changed)`; no command: `T1 skipped (no command)`)
-Notes: <fallbacks, skipped tiers, stale registry, config not saved — or "none">
+Notes: <fallbacks, skipped tiers, stale registry, `config not saved — run /reusable-dev:reuse-setup` — or none>
 ```
 One `Reuse decision:` line per unit touched.
 

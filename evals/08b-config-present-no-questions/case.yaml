@@ -1,19 +1,28 @@
 schema_version: "1.0"
 name: 08b-config-present-no-questions
-description: With config present, no setup questions are asked.
+description: With config present, the configured registry is used and no setup is attempted.
 tags: [behavior, config]
 context:
   scaffold_script: setup.sh
 execution:
   prompt: "Add an outline 'Edit' button to CustomerCard that calls an onEdit prop."
   max_turns: 25
-  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill, AskUserQuestion]
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
+  - type: regex
+    name: read-configured-registry
+    target: trace
+    pattern: "components-registry\\.md"
   - type: tool_used
-    name: no-questions
-    tool: AskUserQuestion
+    name: no-config-write
+    tool: Write
+    input_match: "reusable-dev\\.md"
     min: 0
     max: 0
+  - type: regex
+    name: no-setup-note
+    pattern: "config not saved|reuse-setup"
+    match: not_contains
   - type: regex
     name: uses-outline-button
     target: { source: file, path: src/features/customers/CustomerCard.tsx }

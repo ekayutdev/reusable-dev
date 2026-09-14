@@ -30,7 +30,7 @@ Not applicable: `T3 n/a (no shared unit changed)`. Touched unit without tests: `
 
 **test** — Write the test for the shared unit before the code: cover the default behavior, each variant/option, and the backward-compatible path. Run it and see it fail for the right reason, then implement.
 
-**verify** — Before any "done" statement: run the configured commands for T1–T3 now, read the output, and put the numbers in the report. A configured command that cannot start (missing or broken binary) is reported as `Tn could not run (<error>)` and listed in Notes — never `✓`, never silently swapped for a different command.
+**verify** — Before any "done" statement: run the configured commands for T1–T3 now, read the output, and put the numbers in the report. A configured command that cannot start (missing or broken binary) is reported as `Tn could not run (<error>)` and listed in Notes — never `✓`, never swapped for a different command, and it blocks a "done" claim like a failing test.
 
 **debug** — Read the full failure. Reproduce it with one command. Find the cause in the changed unit before editing anything. Change one thing, rerun. Never weaken or delete an assertion to get green. An intended behavior change may update the changed unit's own tests (T2), noted in Notes. A failing call-site test (T3) is never edited to pass: make the change backward compatible or update the calling code, and list each updated call site in Notes.
 

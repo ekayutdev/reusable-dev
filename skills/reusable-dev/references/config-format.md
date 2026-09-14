@@ -49,7 +49,7 @@ Shared paths: prefer existing dirs in this order — `src/shared/ui`, `src/compo
 ## Missing config (skill step 0)
 
 1. Detect every key above that has a signal.
-2. Ask at most 3 questions in ONE message, only for keys with no signal (usually `shared_paths` and `error_style`). Offer the detected default as the first option.
+2. Ask at most 3 questions in ONE AskUserQuestion call (only via the AskUserQuestion tool), only for keys with no signal (usually `shared_paths` and `error_style`). Offer the detected default as the first option.
 3. Write `.claude/reusable-dev.md` with all keys; `skills` all `[]` (full skill wiring is `/reusable-dev:reuse-setup`).
-4. No way to ask (non-interactive run) or the user skips → do not write the file; continue with detected values and defaults (`error_style: throw`, `registry: docs/reuse-registry.md`) and add `config not saved — run /reusable-dev:reuse-setup` to the report Notes.
+4. AskUserQuestion is not in your tools (non-interactive run) or the user skips → do not write or create `.claude/reusable-dev.md`, do not ask questions in your reply text; continue with detected values and defaults (`error_style: throw`, `registry: docs/reuse-registry.md`) and add exactly `config not saved — run /reusable-dev:reuse-setup` to the report Notes.
 5. Never ask again in a project where the file exists. Changes happen by editing the file or re-running `/reusable-dev:reuse-setup`.

@@ -1,6 +1,6 @@
 schema_version: "1.0"
 name: 08a-no-config
-description: Without config in a non-interactive run, detect values, do not write config, note it, and still do the work.
+description: Without config in a non-interactive run, detect values, do not write config, note it exactly, and still do the work.
 tags: [behavior, config]
 context:
   scaffold_script: setup.sh
@@ -13,7 +13,17 @@ graders:
     name: still-extends-button
     target: { source: file, path: src/components/ui/button.tsx }
     pattern: "(destructive|danger)\\s*:"
-  - type: llm
-    name: detected-and-noted
-    criteria: "Either (a) the final message's Notes say the config was not saved and suggest /reusable-dev:reuse-setup, or (b) a .claude/reusable-dev.md file was created containing stack: react-next and ui_lib: shadcn-react. Pass if (a) or (b) is true."
-    focus: trace
+  - type: regex
+    name: notes-config-not-saved
+    pattern: "config not saved[^\\n]*reuse-setup"
+    flags: i
+  - type: tool_used
+    name: no-config-write
+    tool: Write
+    input_match: "reusable-dev\\.md"
+    min: 0
+    max: 0
+  - type: regex
+    name: no-setup-question-in-reply
+    pattern: "error_style[^\\n]*\\?"
+    match: not_contains

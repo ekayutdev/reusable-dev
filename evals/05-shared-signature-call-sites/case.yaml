@@ -27,7 +27,7 @@ graders:
     pattern: "(#|ℹ) fail 0"
   - type: regex
     name: reports-t3
-    pattern: "T3[^\\n]*(2 call sites|call sites?)"
+    pattern: "T3[^\\n]*call sites?[^\\n]*✓"
     flags: i
   - type: regex
     name: registry-api-updated
