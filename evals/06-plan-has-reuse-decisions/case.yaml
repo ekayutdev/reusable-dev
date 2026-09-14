@@ -18,5 +18,5 @@ graders:
     pattern: "(Reuse decision:[\\s\\S]*){3}"
   - type: llm
     name: decisions-name-existing-units
-    criteria: "docs/plan.md reuses DataTable (src/shared/ui/DataTable.tsx) for the table, extends Button with a destructive/danger variant for Delete, and extracts formatDate to shared for the signup date. Each of these appears in a 'Reuse decision:' line."
+    criteria: "Every numbered task in docs/plan.md that creates or changes code contains its own 'Reuse decision:' line inside that task's section (tasks that only change docs or only run verification are exempt). Those decisions reuse or extend DataTable (src/shared/ui/DataTable.tsx) for the table, extend Button with a destructive/danger variant for Delete, and move formatDate to shared (a new shared file replacing the copies in OrdersPage and InvoicesPage) for the signup date."
     focus: { source: file, path: docs/plan.md }
