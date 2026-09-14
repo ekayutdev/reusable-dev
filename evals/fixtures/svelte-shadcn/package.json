@@ -1,0 +1,13 @@
+{
+  "name": "fixture-svelte-shadcn",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@sveltejs/kit": "^2.70.3",
+    "bits-ui": "^2.19.2",
+    "clsx": "^2.1.1",
+    "svelte": "^5.57.0",
+    "tailwind-merge": "^3.3.0",
+    "tailwind-variants": "^3.3.1"
+  }
+}

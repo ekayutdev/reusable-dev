@@ -1,0 +1,25 @@
+schema_version: "1.0"
+name: 01c-extend-button-svelte
+description: Svelte port — red delete button extends Button variants.
+tags: [core, stack]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a red Delete button to CustomerCard that calls an ondelete prop."
+  max_turns: 25
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: variants-have-destructive
+    target: { source: file, path: src/lib/components/ui/button/button.svelte }
+    pattern: "(destructive|danger)\\s*:"
+  - type: regex
+    name: no-new-button-component
+    target: files
+    pattern: "(danger|delete|red)-?button\\.svelte"
+    flags: i
+    match: not_contains
+  - type: regex
+    name: reports-extend
+    pattern: "Reuse decision:\\s*Extend"
+    flags: i

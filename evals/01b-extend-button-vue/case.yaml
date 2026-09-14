@@ -1,0 +1,24 @@
+schema_version: "1.0"
+name: 01b-extend-button-vue
+description: Vue port — red delete button extends Button variants.
+tags: [core, stack]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a red Delete button to CustomerCard that emits a delete event."
+  max_turns: 25
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: variants-have-destructive
+    target: { source: file, path: src/components/ui/button/index.ts }
+    pattern: "(destructive|danger)\\s*:"
+  - type: regex
+    name: no-new-button-component
+    target: files
+    pattern: "(Danger|Delete|Red)Button\\.vue"
+    match: not_contains
+  - type: regex
+    name: reports-extend
+    pattern: "Reuse decision:\\s*Extend"
+    flags: i
