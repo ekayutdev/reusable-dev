@@ -10,7 +10,7 @@ Read shadcn-core.md first.
 `aliases.ui` in `components.json` — default `$lib/components/ui`, one folder per primitive: `components/ui/button/button.svelte` (Svelte 5 runes component; the `tailwind-variants` (`tv`) variants definition lives in its `<script module>` — variants are exported from the component file, `index.ts` re-exports) + `components/ui/button/index.ts`. Primitives build on Bits UI and style with `tailwind-variants` + `cn` (S4). Import from `$lib/components/ui/button/index.js`.
 
 ## Adding a primitive (CLI)
-`pnpm dlx shadcn-svelte@latest add <name>` (or `npx`/`bunx`); supports URLs and local paths. `npx shadcn-svelte@latest init` creates `components.json` when absent.
+`pnpm dlx shadcn-svelte@latest add <name>` (or `npx`/`bunx`); the CLI also accepts a URL to a registry item JSON. `npx shadcn-svelte@latest init` creates `components.json` when absent.
 
 ## Customizing without forking (S2 example: destructive Button variant)
 ```svelte
@@ -39,7 +39,7 @@ Behavior/composition → wrap in the patterns layer (`shared_paths.components`),
 ```
 
 ## Cross-project sharing
-Build a registry with `shadcn-svelte@latest registry build` from a `registry.json` (writes to `static/r`), served via the `registry` URL in `components.json` so other projects `add` from it. Shared components follow S5.
+Build a registry with `shadcn-svelte@latest registry build` from a `registry.json` (writes to `static/r`). Unlike shadcn-react/shadcn-vue, shadcn-svelte has NO namespaced registries: no `registries` field in `components.json`, no `@namespace/item` — its single `registry` field points the CLI at the default registry or a full fork, so change it only when deliberately using a full fork. Cross-project items are installed with `npx shadcn-svelte@latest add <url-to-item.json>`. S5's `@team/<item>` and discover checklist step 3 (check `registries` in `components.json`) do not apply to this port.
 
 ## Anti-patterns
 - Hand-writing a primitive the registry has (S1) — `shadcn-svelte add` it instead.

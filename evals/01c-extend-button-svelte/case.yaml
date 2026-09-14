@@ -16,10 +16,18 @@ graders:
   - type: regex
     name: no-new-button-component
     target: files
-    pattern: "(danger|delete|red)-?button\\.svelte"
+    pattern: "(^|/)(danger|delete|red|destructive)-?button\\.svelte"
     flags: i
     match: not_contains
+  - type: regex
+    name: card-uses-button
+    target: { source: file, path: src/routes/customers/CustomerCard.svelte }
+    pattern: "<Button\\b(?:[^>]|=>)*variant=[\"'{]*(destructive|danger)"
   - type: regex
     name: reports-extend
     pattern: "Reuse decision:\\s*Extend"
     flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"

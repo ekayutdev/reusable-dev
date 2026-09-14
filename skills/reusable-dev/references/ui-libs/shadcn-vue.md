@@ -31,12 +31,12 @@ Behavior/composition → wrap in the patterns layer (`shared_paths.components`),
 import { Button } from "@/components/ui/button"
 </script>
 <template>
-  <Button variant="destructive" v-bind="$attrs"><slot /></Button>
+  <Button variant="destructive"><slot /></Button>
 </template>
 ```
 
 ## Cross-project sharing
-Build a registry with `shadcn-vue@latest build` from a `registry.json`/`registry-item.json` (same schema family as React), or copy-and-paste via the docs' manual code blocks. Shared components follow S5 — propose a private registry, don't fork primitives per project.
+shadcn-vue supports namespaced registries: `registries` in `components.json` maps `@team` namespaces to URLs, and items install via `npx shadcn-vue@latest add @team/<item>`. Build a registry with `shadcn-vue@latest build` from a `registry.json`/`registry-item.json` (same schema family as React); the build writes registry JSON to `public/r`. Shared components follow S5 — propose a private registry, don't fork primitives per project.
 
 ## Anti-patterns
 - Hand-writing a primitive the registry has (S1) — `shadcn-vue add` it instead.

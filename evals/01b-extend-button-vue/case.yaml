@@ -16,9 +16,18 @@ graders:
   - type: regex
     name: no-new-button-component
     target: files
-    pattern: "(Danger|Delete|Red)Button\\.vue"
+    pattern: "(^|/)(Danger|Delete|Red|Destructive)-?Button\\.vue"
+    flags: i
     match: not_contains
+  - type: regex
+    name: card-uses-button
+    target: { source: file, path: src/features/customers/CustomerCard.vue }
+    pattern: "<Button\\b(?:[^>]|=>)*variant=[\"']*(destructive|danger)"
   - type: regex
     name: reports-extend
     pattern: "Reuse decision:\\s*Extend"
     flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"
