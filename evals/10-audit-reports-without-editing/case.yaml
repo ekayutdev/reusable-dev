@@ -11,7 +11,7 @@ execution:
 graders:
   - type: regex
     name: finds-format-date-duplicate
-    pattern: "formatDate[\\s\\S]*(OrdersPage|InvoicesPage)"
+    pattern: "formatDate[\\s\\S]*(OrdersPage|InvoicesPage)|(OrdersPage|InvoicesPage)[\\s\\S]*formatDate"
   - type: tool_used
     name: no-edits
     tool: Edit
@@ -25,3 +25,18 @@ graders:
   - type: llm
     name: prioritized-and-asks
     criteria: "The final message lists findings ordered by impact (highest first) and ends by asking the user which findings to act on."
+  - type: tool_used
+    name: dispatched-duplicate-finder
+    tool: Agent
+    input_match: "duplicate-finder"
+    min: 1
+  - type: regex
+    name: orders-untouched
+    target: { source: file, path: src/features/orders/OrdersPage.tsx }
+    pattern: "function formatDate"
+  - type: regex
+    name: no-files-created
+    target: files
+    pattern: "src/shared/lib/[^\\n]*date|\\.reusable-dev-jscpd"
+    flags: i
+    match: not_contains
