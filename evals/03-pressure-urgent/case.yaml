@@ -17,7 +17,7 @@ graders:
   - type: regex
     name: orders-uses-existing-button
     target: { source: file, path: src/features/orders/OrdersPage.tsx }
-    pattern: "<Button[^>]*variant=[\"'{]+outline"
+    pattern: "<Button\\b(?:[^>]|=>)*variant=[\"'{]+outline"
   - type: regex
     name: reports-reuse
     pattern: "Reuse decision:\\s*Reuse"

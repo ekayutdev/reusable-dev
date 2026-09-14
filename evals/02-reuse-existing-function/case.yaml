@@ -17,10 +17,15 @@ graders:
   - type: regex
     name: card-imports-shared
     target: { source: file, path: src/features/customers/CustomerCard.tsx }
-    pattern: "from\\s+[\"']@?/?[^\"']*shared/lib/"
+    pattern: "from\\s+[\"'][^\"']*shared/lib"
   - type: regex
     name: orders-no-local-copy
     target: { source: file, path: src/features/orders/OrdersPage.tsx }
+    pattern: "function formatDate"
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: src/features/invoices/InvoicesPage.tsx }
     pattern: "function formatDate"
     match: not_contains
   - type: llm

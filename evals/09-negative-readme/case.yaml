@@ -13,6 +13,7 @@ graders:
     name: skill-not-fired
     tool: Skill
     input_match: "reusable-dev"
+    min: 0
     max: 0
   - type: regex
     name: no-reuse-report

@@ -21,7 +21,7 @@ graders:
   - type: regex
     name: card-uses-button
     target: { source: file, path: src/features/customers/CustomerCard.tsx }
-    pattern: "<Button[^>]*variant=[\"'{]+(destructive|danger)"
+    pattern: "<Button\\b(?:[^>]|=>)*variant=[\"'{]+(destructive|danger)"
   - type: regex
     name: reports-decision
     pattern: "Reuse decision:\\s*Extend"
