@@ -21,9 +21,11 @@
 - Extension points are exactly: `design`, `test`, `verify`, `debug`, `review`, `plan`, `e2e`.
 - Decision ladder is exactly: Reuse → Extend → Compose → Create, with Rule of Three for moving to shared.
 - Eval suite lives in `evals/` (replaces the spec's `tests/` directory — Task 1 updates the spec). Fixtures live in `evals/fixtures/`.
-- Standard eval command (run from repo root):
+- Standard eval command (run from repo root): `evals/lib/run-eval.sh [extra claude plugin eval flags]`. It wraps
   `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish`
-  RED/GREEN iteration may add `--runs 1 --case <name>`; final acceptance uses default 3 runs.
+  and moves `~/.docker` aside for the run (the eval Bash sandbox refuses to start while `~/.docker` holds symlinks), always restoring it.
+  RED/GREEN iteration may add `--runs 1 --case <name>`; final acceptance uses default 3 runs. Never run two evals at once.
+- `node --test` graders must accept both reporters: `(#|ℹ) pass N` / `(#|ℹ) fail 0` (Node ≥ 23 defaults to the spec reporter).
 - Phase 1 stacks: `react-next`, `vue-nuxt`, `sveltekit`, `node-ts`. Phase 1 ui-libs: `shadcn-core`, `shadcn-react`, `shadcn-vue`, `shadcn-svelte`. Nothing else.
 - Commit after every task. Commit messages end with:
   ```
@@ -168,7 +170,7 @@ git commit -m "feat: scaffold reusable-dev plugin manifest"
 ### Task 2: Fixture helper, node-ts and react-shadcn fixtures, eval harness smoke test
 
 **Files:**
-- Create: `evals/lib/use-fixture.sh`
+- Create: `evals/lib/use-fixture.sh`, `evals/lib/run-eval.sh`
 - Create: `evals/fixtures/node-ts/**` (listed below)
 - Create: `evals/fixtures/react-shadcn/**` (listed below)
 - Create: `evals/00-harness-smoke/case.yaml`, `evals/00-harness-smoke/setup.sh`
@@ -199,6 +201,50 @@ fi
 ```
 
 Run: `chmod +x evals/lib/use-fixture.sh`
+
+- [ ] **Step 1b: Create `evals/lib/run-eval.sh`**
+
+```bash
+#!/bin/bash
+# Run the plugin eval suite with ~/.docker moved aside.
+# The eval Bash sandbox refuses to start while ~/.docker contains symlinks
+# (Docker Desktop installs some), so the directory is stashed for the run
+# and always restored. Docker CLI commands fail while an eval is running.
+set -euo pipefail
+
+docker_dir="$HOME/.docker"
+stash="$HOME/.docker.eval-stash"
+
+if [[ -e "$stash" ]]; then
+  echo "run-eval: $stash exists — an earlier run did not restore it." >&2
+  echo "run-eval: restore it first: mv \"$stash\" \"$docker_dir\"" >&2
+  exit 1
+fi
+
+restore() {
+  [[ -e "$stash" ]] || return 0
+  if [[ -e "$docker_dir" ]]; then
+    # Something recreated ~/.docker during the run; keep it instead of nesting.
+    mv "$docker_dir" "$docker_dir.recreated.$(date +%s)"
+  fi
+  mv "$stash" "$docker_dir"
+}
+
+if [[ -e "$docker_dir" ]]; then
+  mv "$docker_dir" "$stash"
+  trap restore EXIT
+  trap 'exit 130' INT TERM HUP
+fi
+
+cd "$(dirname "$0")/../.."
+claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit \
+  --judge-model sonnet --no-publish "$@"
+```
+
+Run: `chmod +x evals/lib/run-eval.sh`
+
+Check restore on interrupt (no eval spend): `bash -c 'evals/lib/run-eval.sh --case does-not-exist' ; ls -d ~/.docker && ls ~/.docker.eval-stash 2>&1`
+Expected: eval reports no matching case; `~/.docker` exists; `~/.docker.eval-stash` does not.
 
 - [ ] **Step 2: Create node-ts fixture files**
 
@@ -312,7 +358,7 @@ Fixture project for reusable-dev evals.
 - [ ] **Step 3: Run the node-ts fixture tests**
 
 Run: `cd evals/fixtures/node-ts && node --test; cd -`
-Expected: `# pass 3` and `# fail 0`.
+Expected: `pass 3` and `fail 0` (Node ≥ 23 prints `ℹ pass 3`; Node 22 prints `# pass 3`).
 
 - [ ] **Step 4: Create react-shadcn fixture files**
 
@@ -540,12 +586,12 @@ graders:
   - type: regex
     name: tests-pass
     target: trace
-    pattern: "# pass 3"
+    pattern: "(#|ℹ) pass 3"
 ```
 
 - [ ] **Step 6: Run the smoke case**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash --no-publish --ablation none --case 00-harness-smoke`
+Run: `evals/lib/run-eval.sh --ablation none --case 00-harness-smoke`
 Expected: `✓ 00-harness-smoke score 1.00`.
 
 - [ ] **Step 7: Commit**
@@ -734,7 +780,7 @@ graders:
 
 - [ ] **Step 6: Run the core cases to record RED**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --tag core`
+Run: `evals/lib/run-eval.sh --runs 1 --tag core`
 Expected: cases 01–04 score < 1.00 in both arms (no skill exists yet; `reports-decision`/`reports-*` graders fail). Case 09 passes. Copy the case score table into the commit message body.
 
 - [ ] **Step 7: Write `skills/reusable-dev/references/config-format.md`**
@@ -1147,7 +1193,7 @@ Expected: SKILL.md ≤ 125 lines total (body ≤ 120), references ≤ 150; valid
 
 - [ ] **Step 5: Run core evals (GREEN)**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --tag core`
+Run: `evals/lib/run-eval.sh --runs 1 --tag core`
 Expected: with-plugin arm: 01, 02, 03, 04, 09 each score 1.00; without-plugin arm lower on 01–04.
 
 If a case fails in the with-plugin arm: open its trace (`tracePath` in `evals/results/<ts>/aggregate-result.json`), find the sentence Claude used to skip a step, add that rationalization as a row in the Red flags table (or tighten the step wording), and rerun only that case with `--case <name>`. Repeat until green. Do not edit graders to make a case pass unless the grader is provably wrong (e.g. path regex mismatch) — record any grader fix in the commit body.
@@ -1225,7 +1271,7 @@ Expected: each ≤ 150.
 
 - [ ] **Step 5: Verify react-next reference is used (extends case 01 evidence)**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --case 01-extend-button-react`
+Run: `evals/lib/run-eval.sh --runs 1 --case 01-extend-button-react`
 Expected: score 1.00; trace contains a Read of `references/stacks/react-next.md` (check with `grep -c "stacks/react-next.md" <tracePath>` ≥ 1).
 
 - [ ] **Step 6: Commit**
@@ -1376,7 +1422,7 @@ If Step 1 research shows the variants live in a different file than the grader p
 
 - [ ] **Step 8: Run the stack cases**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --tag stack`
+Run: `evals/lib/run-eval.sh --runs 1 --tag stack`
 Expected: with-plugin arm 1.00 for both. Fix failures as in Task 5 Step 5.
 
 - [ ] **Step 9: Commit**
@@ -1430,7 +1476,7 @@ graders:
   - type: regex
     name: tests-ran-green
     target: trace
-    pattern: "# fail 0"
+    pattern: "(#|ℹ) fail 0"
   - type: regex
     name: reports-t3
     pattern: "T3[^\\n]*(2 call sites|call sites?)"
@@ -1476,7 +1522,7 @@ graders:
   - type: regex
     name: tests-ran-green
     target: trace
-    pattern: "# fail 0"
+    pattern: "(#|ℹ) fail 0"
 ```
 
 - [ ] **Step 3: Write case 08a**
@@ -1538,7 +1584,7 @@ graders:
 
 - [ ] **Step 5: Run behavior cases**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --tag behavior`
+Run: `evals/lib/run-eval.sh --runs 1 --tag behavior`
 Expected: with-plugin arm 1.00 for 05, 07, 08a, 08b. For each failure, read the trace, tighten the relevant reference or SKILL.md step (not the grader), rerun that case.
 
 - [ ] **Step 6: Commit**
@@ -1595,7 +1641,7 @@ graders:
     criteria: "The final message lists findings ordered by impact (highest first) and ends by asking the user which findings to act on."
 ```
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --case 10-audit-reports-without-editing`
+Run: `evals/lib/run-eval.sh --runs 1 --case 10-audit-reports-without-editing`
 Expected: FAIL (command does not exist).
 
 - [ ] **Step 2: Write `agents/duplicate-finder.md`**
@@ -1663,7 +1709,7 @@ Rows from the agent's FINDING lines, highest impact first. After the table: find
 
 - [ ] **Step 4: Run case 10 (GREEN)**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --case 10-audit-reports-without-editing`
+Run: `evals/lib/run-eval.sh --runs 1 --case 10-audit-reports-without-editing`
 Expected: with-plugin arm 1.00. If the slash command text is not expanded in eval prompts (trace shows the literal `/reusable-dev:reuse-audit src` being treated as plain text with no command content), change the prompt to `Run the reusable-dev reuse-audit command on src.` and record this in the commit body.
 
 - [ ] **Step 5: Commit**
@@ -1745,7 +1791,7 @@ Arguments: "$ARGUMENTS"
 
 - [ ] **Step 3: Run case 11 (GREEN)**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --case 11-setup-writes-config`
+Run: `evals/lib/run-eval.sh --runs 1 --case 11-setup-writes-config`
 Expected: with-plugin arm 1.00.
 
 - [ ] **Step 4: Commit**
@@ -1891,7 +1937,7 @@ Never print ✓ for a tier whose command did not run.
 
 - [ ] **Step 5: Run cases 12 and 13 (GREEN)**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --case "1[23]-*"`
+Run: `evals/lib/run-eval.sh --runs 1 --case "1[23]-*"`
 Expected: with-plugin arm 1.00 for both.
 
 - [ ] **Step 6: Commit**
@@ -1944,7 +1990,7 @@ The `has-reuse-decisions` pattern requires at least three `Reuse decision:` line
 
 - [ ] **Step 2: Run case 06**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --runs 1 --case 06-plan-has-reuse-decisions`
+Run: `evals/lib/run-eval.sh --runs 1 --case 06-plan-has-reuse-decisions`
 Expected: with-plugin arm 1.00.
 
 - [ ] **Step 3: Write `evals/MANUAL.md`**
@@ -2003,7 +2049,7 @@ Expected: the always-loaded cost is only the skill description + command/agent d
 
 - [ ] **Step 5: Full acceptance run (3 runs per case)**
 
-Run: `claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish --json evals/results/acceptance.json`
+Run: `evals/lib/run-eval.sh --json evals/results/acceptance.json`
 Expected: every case with-plugin score ≥ 0.9 (default threshold 1.0 may flag single flaky runs — inspect any case below 1.0 and fix real failures); ablation delta positive for cases 01–05 and 06. Case 00 is harness-only and 09 must stay 1.00.
 
 - [ ] **Step 6: Commit**
@@ -2080,7 +2126,7 @@ claude plugin install reusable-dev@<marketplace>
 
 ```bash
 claude plugin validate . --strict
-claude plugin eval . --scaffold --trust-plugin --allow-tools Bash Write Edit --judge-model sonnet --no-publish
+evals/lib/run-eval.sh
 ```
 Manual checks with superpowers: `evals/MANUAL.md`
 ````
