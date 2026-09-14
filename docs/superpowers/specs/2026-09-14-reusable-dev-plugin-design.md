@@ -59,9 +59,11 @@ reusable-dev/                         (root ของ repo นี้)
 │   └── reuse-verify.md
 ├── agents/
 │   └── duplicate-finder.md
-├── tests/
+├── evals/                            ← claude plugin eval suite
 │   ├── fixtures/                     ← react-shadcn, vue-shadcn, svelte-shadcn, node-ts
-│   └── scenarios.md
+│   ├── lib/use-fixture.sh
+│   ├── <case>/case.yaml + setup.sh   ← หนึ่ง scenario ต่อหนึ่งโฟลเดอร์
+│   └── MANUAL.md                     ← checklist ทดสอบมือ (ร่วมกับ superpowers)
 └── README.md
 ```
 
@@ -286,13 +288,13 @@ skills:
 
 แนวทาง RED → GREEN → REFACTOR สำหรับ skill: รันแต่ละ scenario แบบไม่มี plugin ก่อนเพื่อบันทึก baseline แล้วรันแบบมี plugin
 
-### Fixtures (`tests/fixtures/`)
+### Fixtures (`evals/fixtures/`)
 `react-shadcn` · `vue-shadcn` · `svelte-shadcn` · `node-ts` ทุกตัวต้องมี:
 - `Button` (หรือ primitive เทียบเท่า) และ pattern component 1 ตัวใน shared
 - `formatDate` เขียนซ้ำใน 2 feature
 - คำสั่ง test/typecheck ที่รันได้จริง
 
-### Scenarios (`tests/scenarios.md`)
+### Scenarios (`evals/<case>/case.yaml`)
 1. "เพิ่มปุ่มลบสีแดง" → Extend `Button` (+variant) ไม่สร้าง `DangerButton`
 2. "แสดงวันที่ในหน้า orders" → reuse `formatDate`
 3. **Pressure:** "ด่วน เขียน component ใหม่ไปเลย" → ยังค้นก่อน และรายงาน decision
@@ -305,7 +307,8 @@ skills:
 
 ### Structural validation
 - `plugin-dev:plugin-validator` และ `plugin-dev:skill-reviewer`
-- ประเมินว่าจะใช้ `claude plugin eval` รัน scenario อัตโนมัติได้หรือไม่ ตัดสินใจในขั้น implementation plan
+- รัน scenario ด้วย `claude plugin eval` (ablation with-without = baseline ไม่มี plugin เทียบกับมี plugin)
+- Scenario 6 (ร่วมกับ superpowers) ทดสอบด้วย eval ที่ไม่ต้องมี superpowers + checklist มือใน `evals/MANUAL.md` เพราะ eval โหลด plugin นอก root ไม่ได้
 
 ## 13. Phasing
 
