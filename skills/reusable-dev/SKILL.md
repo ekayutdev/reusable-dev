@@ -19,7 +19,7 @@ Read `.claude/reusable-dev.md`. Missing → follow "Missing config" in `referenc
 ### 1. Discover
 1. Grep the registry file (config `registry`) for the thing you need plus 2–3 synonyms (button/btn/action · date/format/time · price/money/currency).
 2. Confirm each hit's path exists. Missing → Notes: `registry stale — run /reusable-dev:reuse-registry --sync`.
-3. Grep `shared_paths` and the whole `src/` for the same terms and for similar function bodies or prop names. Duplicates inside feature folders count.
+3. Grep `shared_paths` and the whole source tree (`src/`, `app/`, `components/`, `composables/`, `lib/`, `apps/*`, `packages/*` — whichever exist; skip `node_modules` and build output) for the same terms and for similar function bodies or prop names. Duplicates inside feature folders count.
 4. `ui_lib` set → check its primitives directory, then its CLI registry (`references/ui-libs/<ui_lib>.md`).
 
 ### 2. Decide
@@ -31,8 +31,8 @@ Pick the FIRST option that works, and say why earlier options do not:
 
 ### 3. Design
 Load only what applies:
-- UI → `references/component-design.md`; logic → `references/function-design.md`
-- `references/stacks/<stack>.md` if present (unknown stack → general rules; Notes: `no stack reference for <stack> — /reusable-dev:reuse-setup can add one`)
+- UI → `references/component-design.md`; logic → `references/function-design.md` (these rules always apply, also when a `design` skill is configured)
+- `references/stacks/<stack>.md` if present — when `stack` is a path map, use the entry whose path contains the file you are changing (unknown stack → general rules; Notes: `no stack reference for <stack> — /reusable-dev:reuse-setup can add one`)
 - `references/ui-libs/<ui_lib>.md` if `ui_lib` is set
 - Extension points `design`, `test` → `references/integration.md`
 New or changed shared unit → write its test first.
@@ -51,7 +51,7 @@ Writing a design or implementation plan (with any planning skill or none): do Di
 
 ```
 Reuse decision: <Reuse|Extend|Compose|Create> <unit> (<path>) — <one-line why>
-Verified: T1 … · T2 … · T3 …
+Verified: T1 … · T2 … · T3 …   (a tier that does not apply: `T3 n/a (no shared unit changed)`; no command: `T1 skipped (no command)`)
 Notes: <fallbacks, skipped tiers, stale registry, config not saved — or "none">
 ```
 One `Reuse decision:` line per unit touched.

@@ -24,6 +24,7 @@ Report only what you ran, with the real result. A tier with no command is `skipp
 Verified: T1 typecheck ✓ lint skipped (no command) · T2 4 tests ✓ · T3 2 call sites, 3 tests ✓
 ```
 Failure: `T2 1 failing (money.test.ts: formats USD)` and stop to debug — do not claim done.
+Not applicable: `T3 n/a (no shared unit changed)`. Touched unit without tests: `T2 no tests for <path>` (and add the test if the unit is shared).
 
 ## Built-in fallbacks (used when the extension point is empty or its skill is missing)
 
@@ -31,6 +32,6 @@ Failure: `T2 1 failing (money.test.ts: formats USD)` and stop to debug — do no
 
 **verify** — Before any "done" statement: run the configured commands for T1–T3 now, read the output, and put the numbers in the report.
 
-**debug** — Read the full failure. Reproduce it with one command. Find the cause in the changed unit before editing anything. Change one thing, rerun. Never weaken or delete an assertion to get green; if the behavior change is intended, update the test and say so in Notes.
+**debug** — Read the full failure. Reproduce it with one command. Find the cause in the changed unit before editing anything. Change one thing, rerun. Never weaken or delete an assertion to get green. An intended behavior change may update the changed unit's own tests (T2), noted in Notes. A failing call-site test (T3) is never edited to pass: make the change backward compatible or update the calling code, and list each updated call site in Notes.
 
 **review** — For a changed shared API: (1) every existing call compiles and behaves the same, or is updated in this change; (2) new props/params are optional with defaults; (3) removed/renamed items are deprecated, not deleted; (4) registry row updated.
