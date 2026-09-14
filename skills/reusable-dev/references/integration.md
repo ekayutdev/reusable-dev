@@ -12,7 +12,7 @@ reusable-dev depends on roles, not on specific skills. Nothing here is required.
 | `debug` | a test fails | `superpowers:systematic-debugging`, `mattpocock-skills:diagnosing-bugs` | verification.md → debug |
 | `review` | shared API changed | `pr-review-toolkit:code-reviewer` (agent) | verification.md → review |
 | `plan` | `/reusable-dev:reuse-audit` finds a large refactor (not the skill's "When planning" section) | `superpowers:writing-plans` | numbered steps in the audit report |
-| `e2e` | `/reusable-dev:reuse-verify` | `chrome-devtools-mcp:chrome-devtools`, `commands.e2e` | `commands.e2e` |
+| `e2e` | `/reusable-dev:reuse-verify` | `chrome-devtools-mcp:chrome-devtools` | `commands.e2e` |
 
 ## Rules
 

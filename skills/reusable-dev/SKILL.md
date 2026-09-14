@@ -32,7 +32,7 @@ Pick the FIRST option that works, and say why earlier options do not:
 ### 3. Design
 Load only what applies:
 - UI → `references/component-design.md`; logic → `references/function-design.md` (these rules always apply, also when a `design` skill is configured)
-- `references/stacks/<stack>.md`, or the project's `.claude/reusable-dev/stacks/<stack>.md`, if present — when `stack` is a path map, use the entry with the longest path prefix of the file (planning: of the target directory); no match → general rules (unknown stack → general rules; Notes: `no stack reference for <stack> — /reusable-dev:reuse-setup can add one`)
+- `references/stacks/<stack>.md`, or the project's `.claude/reusable-dev/stacks/<stack>.md`, if present — when `stack` is a path map, use the entry with the longest path prefix of the file (planning: of the target directory); no match → general rules; Notes: `no stack reference for <stack> — /reusable-dev:reuse-setup can add one`
 - `references/ui-libs/<ui_lib>.md` if `ui_lib` is set and the file exists (missing → Notes: `no ui-lib reference for <ui_lib>`)
 - Extension points `design`, `test` → `references/integration.md`
 New or changed shared unit → write its test first.
@@ -60,11 +60,11 @@ Changing an existing unit without an API change: `Reuse decision: Reuse <unit> (
 
 ## Red flags
 
-|| Thought | Reality ||
-||---|---|---|
-|| "User said urgent, skip the search" | Discover is the fast path. Do it, keep it short. |
-|| "A new DangerButton is simpler" | A variant on Button is Extend. |
-|| "Put it in shared, it might be reused" | One use = feature folder. |
-|| "There are two copies already, a third is fine" | Third use = extract to shared now. |
-|| "Tests probably pass" | Run them, or write `skipped (no command)`. |
-|| "Loosen the call-site test so it passes" | Keep the API backward compatible or update the caller. |
+| Thought | Reality |
+|---|---|
+| "User said urgent, skip the search" | Discover is the fast path. Do it, keep it short. |
+| "A new DangerButton is simpler" | A variant on Button is Extend. |
+| "Put it in shared, it might be reused" | One use = feature folder. |
+| "There are two copies already, a third is fine" | Third use = extract to shared now. |
+| "Tests probably pass" | Run them, or write `skipped (no command)`. |
+| "Loosen the call-site test so it passes" | Keep the API backward compatible or update the caller. |

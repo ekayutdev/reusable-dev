@@ -1,6 +1,6 @@
 ---
 name: duplicate-finder
-description: "Read-only scanner for reusable-dev. Use when /reusable-dev:reuse-audit (or the main agent) needs duplicated code, reuse-rule violations, untested shared units, or hand-written UI primitives found across a directory without loading file contents into the main context. Returns one FINDING line per issue. <example>user: /reusable-dev:reuse-audit src; assistant: dispatches the duplicate-finder agent with the scan paths, then reports a findings table ordered by impact — | 1 | 2 | duplicate | - | 100% | src/features/orders/OrdersPage.tsx:5, src/features/invoices/InvoicesPage.tsx:5 | Extract formatDate to src/shared/lib/format-date.ts |</example>"
+description: "Read-only scanner for reusable-dev. Use when /reusable-dev:reuse-audit (or the main agent) needs duplicated code, reuse-rule violations, untested shared units, or hand-written UI primitives found across a directory without loading file contents into the main context. Returns one FINDING line per issue. <example>user: /reusable-dev:reuse-audit src; assistant: dispatches the duplicate-finder agent with the scan paths, then reports a findings table ordered by impact — | 1 | 2 | duplicate | - | 95% | src/a/PriceTag.tsx:12, src/b/CartRow.tsx:30 | Extract formatPrice to src/shared/lib/price.ts |</example>"
 tools: Read, Grep, Glob, Bash
 model: sonnet
 color: cyan
@@ -14,7 +14,7 @@ The prompt gives: scan path(s), `shared_paths`, `ui_lib`, `stack`, and the absol
 ## Procedure
 1. Read `component-design.md`, `function-design.md`, and (if `ui_lib` starts with `shadcn`) `ui-libs/shadcn-core.md` from the references directory.
 2. Duplicates:
-   - If `npx --no-install jscpd --version` succeeds, run `npx --no-install jscpd --min-lines 5 --reporters json --output "${TMPDIR:-/tmp}/reusable-dev-jscpd" <paths>` and read the JSON, then delete the `reusable-dev-jscpd` directory.
+   - If `npx --no-install jscpd --version` succeeds, run `npx --no-install jscpd --min-lines 5 --reporters json --output "${TMPDIR:-/tmp}/reusable-dev-jscpd" <paths>` and read the JSON, then delete the `${TMPDIR:-/tmp}/reusable-dev-jscpd` directory.
    - Otherwise grep for function/component declarations (`function \w+`, `const \w+ = (`, `export default`), group identical names across files, and read those declarations to compare bodies. Also grep for identical literal-heavy lines (format strings, regexes, URLs) appearing in 2+ files.
 3. Rule violations: check each rule (use the "How to check" column where the table has one; for S1–S5 use the rule text) against files under the scan paths (C1–C8 for UI files, F1–F8 for logic files, S1–S5 when shadcn).
 4. Untested shared units: every export under `shared_paths` without a colocated `*.test.*`/`*.spec.*`.
@@ -27,6 +27,6 @@ The prompt gives: scan path(s), `shared_paths`, `ui_lib`, `stack`, and the absol
 Format: `FINDING | <kind> | <rule id or -> | <impact 1-5> | <similarity % or -> | <path:line>[, <path:line>…] | <suggestion>`
 `<kind>` is exactly one of `duplicate`, `rule`, `untested-shared`, `handwritten-primitive`.
 ```
-FINDING | duplicate | - | 2 | 100% | src/features/orders/OrdersPage.tsx:5, src/features/invoices/InvoicesPage.tsx:5 | Extract formatDate to src/shared/lib/format-date.ts
+FINDING | duplicate | - | 2 | 95% | src/a/PriceTag.tsx:12, src/b/CartRow.tsx:30 | Extract formatPrice to src/shared/lib/price.ts
 ```
 No file contents, no preamble. If nothing is found: `NO_FINDINGS`.
