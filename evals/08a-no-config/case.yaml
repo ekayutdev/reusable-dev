@@ -23,6 +23,10 @@ graders:
     input_match: "reusable-dev\\.md"
     min: 0
     max: 0
+  - type: file_exists
+    name: config-file-not-created
+    path: .claude/reusable-dev.md
+    exists: false
   - type: regex
     name: no-setup-question-in-reply
     pattern: "error_style[^\\n]*\\?"

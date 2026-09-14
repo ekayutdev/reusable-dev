@@ -12,7 +12,7 @@ graders:
   - type: regex
     name: read-configured-registry
     target: trace
-    pattern: "components-registry\\.md"
+    pattern: "REG-SENTINEL-8B"
   - type: tool_used
     name: no-config-write
     tool: Write
