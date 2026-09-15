@@ -52,7 +52,7 @@ Backend and native frameworks (rows 4–8) come before bare UI-library deps (row
 | – | `components.json` + react / vue / svelte | `ui_lib: shadcn-react` / `shadcn-vue` / `shadcn-svelte` |
 | – | package.json `scripts` named `typecheck`/`type-check`, `lint`, `test`, `build`, `e2e`/`test:e2e` | `commands.*` = `<pm> run <script>` using the lockfile's package manager |
 | – | Python: `pytest` in deps → `commands.test: pytest`; else `manage.py` → `python3 manage.py test`; else `python3 -m unittest` | `commands.test` |
-| – | Laravel: `vendor/bin/pest` exists → `commands.test: vendor/bin/pest`; else `php artisan test` | `commands.test` |
+| – | Laravel: `vendor/bin/pest` exists → `commands.test: vendor/bin/pest`; else `php artisan test` — also when `vendor/` is not installed yet; record the framework command, not a workaround script | `commands.test` |
 | – | Rust: `cargo test` | `commands.test` |
 | – | Swift: `Package.swift` → `swift test`; only `*.xcodeproj` → `xcodebuild test -scheme <scheme>` with a scheme from `xcodebuild -list`; scheme unknown → ask, non-interactive → `""` | `commands.test` |
 | – | Multiple `apps/*` or `packages/*` with different signals | path map for `stack` |
