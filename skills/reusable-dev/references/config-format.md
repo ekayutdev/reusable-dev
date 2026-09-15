@@ -4,7 +4,7 @@ Committed to git so the whole team shares one convention. YAML frontmatter + fre
 
 ```yaml
 ---
-stack: react-next            # react-next | vue-nuxt | sveltekit | node-ts | nestjs | fastapi | django | python | laravel | rust-axum | swiftui, or an ecosystem name (go | php | rust | swift, no reference file), or a path map for monorepos:
+stack: react-next            # react-next | vue-nuxt | sveltekit | node-ts | nestjs | fastapi | django | python | laravel | rust-axum | swiftui | dotnet, or an ecosystem name (go | php | rust | swift | fsharp, no reference file), or a path map for monorepos:
 # stack: { "apps/web": react-next, "apps/api": node-ts }
 ui_lib: shadcn-react         # shadcn-react | shadcn-vue | shadcn-svelte | ""
 shared_paths:
@@ -33,7 +33,7 @@ skills:                      # optional extension points; [] = built-in fallback
 
 Use the first row that matches, top to bottom.
 
-Backend and native frameworks (rows 4–8) come before bare UI-library deps (row 9) and generic package.json rows (10–11) because those projects often keep a package.json only for asset tooling (Vite, Tailwind).
+Backend and native frameworks (rows 4–9) come before bare UI-library deps (row 10) and generic package.json rows (11–12) because those projects often keep a package.json only for asset tooling (Vite, Tailwind).
 
 | # | Signal | Value |
 |---|---|---|
@@ -45,16 +45,18 @@ Backend and native frameworks (rows 4–8) come before bare UI-library deps (row
 | 6 | `artisan`, or `laravel/framework` in `composer.json` | `stack: laravel` |
 | 7 | `axum` in any `Cargo.toml` in the repo (root, member, or excluded crate) | `stack: rust-axum` |
 | 8 | `Package.swift` or `*.xcodeproj` present and `import SwiftUI` in a source file | `stack: swiftui` |
-| 9 | `"react"` in deps without next → `stack: react-next`; `"vue"` in deps without nuxt → `stack: vue-nuxt` | see signal |
-| 10 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
-| 11 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` / `composer.json` / `Cargo.toml` / `Package.swift` at the same level (tsconfig.json optional) | `stack: node-ts` |
-| 12 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `stack: python` |
+| 9 | `*.sln` at the root, or `*.csproj` at the root or in `src/*/` | `stack: dotnet` |
+| 10 | `"react"` in deps without next → `stack: react-next`; `"vue"` in deps without nuxt → `stack: vue-nuxt` | see signal |
+| 11 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
+| 12 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` / `composer.json` / `Cargo.toml` / `Package.swift` / `*.sln` / `*.csproj` at the same level (tsconfig.json optional) | `stack: node-ts` |
+| 13 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `stack: python` |
 | – | `components.json` + react / vue / svelte | `ui_lib: shadcn-react` / `shadcn-vue` / `shadcn-svelte` |
 | – | package.json `scripts` named `typecheck`/`type-check`, `lint`, `test`, `build`, `e2e`/`test:e2e` | `commands.*` = `<pm> run <script>` using the lockfile's package manager |
 | – | Python: `pytest` in deps → `commands.test: pytest`; else `manage.py` → `python3 manage.py test`; else `python3 -m unittest` | `commands.test` |
 | – | Laravel: `vendor/bin/pest` exists → `commands.test: vendor/bin/pest`; else `php artisan test` — also when `vendor/` is not installed yet; record the framework command, not a workaround script | `commands.test` |
 | – | Rust: `cargo test` | `commands.test` |
 | – | Swift: `Package.swift` → `swift test`; only `*.xcodeproj` → `xcodebuild test -scheme <scheme>` with a scheme from `xcodebuild -list`; scheme unknown → ask, non-interactive → `""` | `commands.test` |
+| – | .NET: `commands.test: dotnet test`; `commands.build: dotnet build` | `commands.test`, `commands.build` |
 | – | Multiple `apps/*` or `packages/*` with different signals | path map for `stack` |
 
 `stack: python` loads `stacks/python.md`.
@@ -70,10 +72,11 @@ A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (writt
 | PHP | `app/`, `src/`, `resources/views/components/`, `packages/*` | `vendor/`, `storage/`, `bootstrap/cache/`, `node_modules` |
 | Rust | `src/`, `crates/*` | `target/` |
 | Swift | `Sources/*`, `Packages/*`, the app target folder | `.build/`, `DerivedData/` |
+| C# | `src/*`, `tests/*`, project folders next to the `*.sln` | `bin/`, `obj/`, `node_modules` |
 
 Python shared paths (first that exists, as `shared_paths.functions`): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`; `shared_paths.components` is `common/templates` for Django, otherwise `""`.
 
-Laravel shared paths (first that exists): functions `app/Support`, `app/Actions`; components `resources/views/components`. Rust: functions `crates/shared/src`, `src/shared`; components `""`. SwiftUI: functions `Sources/Shared`, `Packages/Shared/Sources`; components `Sources/DesignSystem`, `Packages/DesignSystem/Sources`.
+Laravel shared paths (first that exists): functions `app/Support`, `app/Actions`; components `resources/views/components`. Rust: functions `crates/shared/src`, `src/shared`; components `""`. SwiftUI: functions `Sources/Shared`, `Packages/Shared/Sources`; components `Sources/DesignSystem`, `Packages/DesignSystem/Sources`. .NET: functions `src/Shared`, `src/*.Shared`; components `src/*/Components/Shared`, `src/*.Components`.
 
 ## Missing config (skill step 0)
 
