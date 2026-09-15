@@ -1,0 +1,5 @@
+[workspace]
+resolver = "2"
+members = ["crates/billing"]
+# crates/api needs axum and tokio from crates.io; it is excluded so tests run offline.
+exclude = ["crates/api"]

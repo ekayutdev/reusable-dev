@@ -1,0 +1,48 @@
+schema_version: "1.0"
+name: 14-rule-of-three-rust-axum
+description: Rust axum — a third money-formatting need extracts the duplicated helper to a shared crate or module and keeps cargo tests green.
+tags: [phase2b, rust-axum]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: 'Add a pub fn balance_label(customer: &Customer) -> String in crates/billing/src/customers.rs that returns text like "Balance: $12.50" from customer.balance_cents, with a unit test in the same file.'
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: '(^|\n)(crates/shared/src/[^\n]*\.rs|crates/billing/src/(money|shared)[^\n]*\.rs)'
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: crates/billing/src/orders.rs }
+    pattern: 'fn format_money'
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: crates/billing/src/invoices.rs }
+    pattern: 'fn format_money'
+    match: not_contains
+  - type: regex
+    name: imports-shared
+    target: { source: file, path: crates/billing/src/customers.rs }
+    pattern: '(crate|super)::(money|shared)\b|\bshared::'
+  - type: regex
+    name: reports-t2-skipped
+    pattern: 'Verified:[^\n]*T2 skipped'
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: crates/billing/src/orders.rs }
+    pattern: 'Order total: \$25\.00'
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: crates/billing/src/invoices.rs }
+    pattern: 'Amount due: \$3\.50'
+  - type: regex
+    name: reports-create
+    pattern: 'Reuse decision:\s*Create'
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"
