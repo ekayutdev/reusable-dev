@@ -24,16 +24,28 @@ axum web service (tokio, tower). No language core file — the general rules plu
 Not applicable — no UI.
 
 ## Logic idioms
-- F2: handlers receive `State<AppState>` and delegate; state holds collaborators behind traits or generics, constructed once in `main` (docs.rs/axum, extract/State → With `Router`):
+- F2: handlers receive `State<AppState>` and delegate; state holds collaborators behind `#[async_trait::async_trait]` traits, constructed once in `main` (docs.rs/axum, extract/State → With `Router`). A native `async fn` in a trait is not usable behind `dyn` (dyn-incompatible) and its generic future is not known to be `Send`; `async_trait` (crate `async-trait = "0.1"`, impls carry the attribute too) boxes a `Send` future so `Arc<dyn ShipmentTracker + Send + Sync>` works. Alternatives: a generic service `S: ShipmentTracker + Send + Sync + 'static`, or a synchronous collaborator.
 ```rust
+#[async_trait::async_trait]
+pub trait ShipmentTracker: Send + Sync {
+    async fn dispatch(&self, id: u64) -> Result<Shipment, DispatchError>;
+}
+
+pub struct Shipment { pub id: u64 } // domain type, in crates/<domain>
+
 #[derive(Clone)]
 struct AppState {
     tracker: Arc<dyn ShipmentTracker + Send + Sync>,
 }
 
-async fn dispatch_shipment(State(state): State<AppState>, Path(id): Path<u64>) -> String {
-    state.tracker.dispatch(id).await
+async fn dispatch_shipment(
+    State(state): State<AppState>,
+    Path(id): Path<u64>,
+) -> Result<Json<Shipment>, ApiError> {
+    Ok(Json(state.tracker.dispatch(id).await?))
 }
+
+// Router::new().route("/shipments/{id}/dispatch", get(dispatch_shipment)).with_state(state);
 ```
 - Domain functions stay pure and synchronous where possible — an async boundary is needed only at I/O calls; `error_style: result` is the natural default.
 - F6: domain crates return `Result<T, DomainError>`; `thiserror` derives the error type, a wrapper in `crates/api` converts it to a response (docs.rs/thiserror, Example; docs.rs/axum, response/IntoResponse → Implementing `IntoResponse`):
@@ -42,6 +54,14 @@ async fn dispatch_shipment(State(state): State<AppState>, Path(id): Path<u64>) -
 pub enum DispatchError {
     #[error("shipment {0} not found")]
     NotFound(u64),
+}
+
+pub struct ApiError(DispatchError);
+
+impl From<DispatchError> for ApiError {
+    fn from(e: DispatchError) -> Self {
+        ApiError(e)
+    }
 }
 
 impl IntoResponse for ApiError {
