@@ -1,0 +1,49 @@
+schema_version: "1.0"
+name: 14-rule-of-three-laravel
+description: Laravel — a third money-formatting need extracts the duplicated private helper to a shared support class and keeps tests green.
+tags: [phase2b, laravel]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: 'Add a balanceLabel(Customer $customer): string method to a new App\Services\CustomerService class in app/Services/CustomerService.php that returns text like "Balance: $12.50" from $customer->balanceCents (App\Data\Customer), with a test in tests/Unit/CustomerServiceTest.php.'
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: '(^|\n)app/(Support|Actions)/[^\n]*\.php'
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: app/Services/OrderService.php }
+    pattern: 'function formatMoney'
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: app/Services/InvoiceService.php }
+    pattern: 'function formatMoney'
+    match: not_contains
+  - type: regex
+    name: imports-shared
+    target: { source: file, path: app/Services/CustomerService.php }
+    pattern: 'App\\(Support|Actions)\\'
+  - type: regex
+    name: tests-green
+    target: trace
+    pattern: 'OK (?:[3-9]|\d{2,}) tests'
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: tests/Unit/OrderServiceTest.php }
+    pattern: 'Order total: \$25\.00'
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: tests/Unit/InvoiceServiceTest.php }
+    pattern: 'Amount due: \$3\.50'
+  - type: regex
+    name: reports-create
+    pattern: 'Reuse decision:\s*Create'
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"

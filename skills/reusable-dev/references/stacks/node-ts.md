@@ -22,13 +22,13 @@ Not applicable — no UI. C3–C6 (variant enums, children/slots, rest props/ref
 ## Logic idioms
 - F2 DI: factory functions taking a `deps` object — clients, clock, and randomness arrive as arguments; no module-level singletons created at import time.
 ```ts
-export interface InvoiceDeps { db: Db; clock: () => Date }
-export function createInvoiceService(deps: InvoiceDeps) {
+export interface ShipmentDeps { db: Db; clock: () => Date }
+export function createShipmentTracker(deps: ShipmentDeps) {
   return {
-    async getInvoice(id: string): Promise<Invoice> {
-      const invoice = await deps.db.findInvoice(id);
-      if (!invoice) throw new NotFoundError(id);   // F6 throw style
-      return invoice;
+    async getShipment(id: string): Promise<Shipment> {
+      const shipment = await deps.db.findShipment(id);
+      if (!shipment) throw new NotFoundError(id);   // F6 throw style
+      return shipment;
     },
   };
 }
