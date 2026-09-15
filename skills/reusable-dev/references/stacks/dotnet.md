@@ -18,7 +18,7 @@ ASP.NET Core minimal APIs plus Blazor components on .NET 8+. No language core fi
 - `src/<App>.Api` or `src/Web` — endpoints, `Program.cs`, `Components/`; never a reuse source for domain logic.
 - `src/<Domain>` — pure logic, no ASP.NET package references.
 - `src/Shared` — cross-domain helpers; shared components in `src/Web/Components/Shared` or an RCL.
-- SDK-style projects include every `.cs` file under the project folder — a file dropped into `src/Billing/Shared/` compiles with no wiring; a new shared *project* needs `dotnet sln add` plus a `ProjectReference` in the consuming `.csproj`.
+- SDK-style projects include every `.cs` file under the project folder — a file dropped into `src/<Domain>/Shared/` compiles with no wiring; a new shared *project* needs `dotnet sln add` plus a `ProjectReference` in the consuming `.csproj`.
 - Skip `bin/`, `obj/` — build output, never a reuse source.
 
 ## Component idioms
@@ -48,14 +48,14 @@ builder.Services.AddScoped<IShipmentTracker, ShipmentTracker>();
 - Settings: one options class per concern, read via `IOptions<T>` (learn.microsoft.com/aspnet/core/fundamentals/configuration/options):
 ```csharp
 builder.Services.Configure<ReportOptions>(builder.Configuration.GetSection("Reports"));
-// consumer: ReportSettings options.Value
+// consumer: IOptions<ReportOptions> options → options.Value
 ```
-- F6: services throw domain exceptions; map them once with `IExceptionHandler` to `ProblemDetails` / `TypedResults.Problem`, not per endpoint (learn.microsoft.com/aspnet/core/fundamentals/error-handling). With `error_style: result`, return a `Result<T>` type instead of throwing.
+- F6: services throw domain exceptions; map them once with `IExceptionHandler` to `ProblemDetails` / `TypedResults.Problem`, not per endpoint (learn.microsoft.com/aspnet/core/fundamentals/error-handling). An `IExceptionHandler` runs only when registered: `builder.Services.AddExceptionHandler<T>()` + `AddProblemDetails()` and `app.UseExceptionHandler()`. With `error_style: result`, return a `Result<T>` type instead of throwing.
 
 ## Testing
 - xUnit / NUnit / MSTest; `dotnet test` runs the solution (learn.microsoft.com/dotnet/core/testing/unit-testing-csharp-with-xunit).
 - One class: `dotnet test --filter FullyQualifiedName~ShipmentTests` (learn.microsoft.com/dotnet/core/testing/selective-unit-tests).
-- API tests: `WebApplicationFactory<Program>` with an in-memory TestServer (learn.microsoft.com/aspnet/core/test/integration-tests). Component tests: bUnit, only when the project already has it.
+- API tests: `WebApplicationFactory<Program>` with an in-memory TestServer (learn.microsoft.com/aspnet/core/test/integration-tests); it needs `public partial class Program { }` in `Program.cs` when it uses top-level statements. Component tests: bUnit, only when the project already has it.
 - Use exactly what config `commands.test` specifies; if it is empty, run no test command and report `T2 skipped (no command)` (commands above are examples for filling the config).
 
 ## Stack-specific anti-patterns

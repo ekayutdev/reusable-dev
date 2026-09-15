@@ -31,14 +31,14 @@ graders:
   - type: regex
     name: customers-uses-shared
     target: { source: file, path: src/Billing/CustomerService.cs }
-    pattern: '\w+\.(Format|ToMoney)\w*\(|using Billing\.(Shared|Common)\b'
+    pattern: '\w+(?<![Ss]tring)\.(Format|ToMoney)\w*\(|using (static )?Billing\.(Shared|Common)\b'
   - type: regex
     name: reports-t2-skipped
     pattern: 'Verified:[^\n]*T2 skipped'
   - type: regex
     name: shared-wired
     target: trace
-    pattern: 'ProjectReference Include=\\"[^"\\]*Shared[^"\\]*\.csproj|src/Billing/(Shared|Common)/'
+    pattern: 'ProjectReference Include=\\?"[^"]*Shared[^"]*\.csproj|file_path\\?":\s*\\?"[^"]*src/Billing/(Shared|Common)/'
   - type: regex
     name: orders-assertion-kept
     target: { source: file, path: tests/Billing.Tests/OrderServiceTests.cs }
