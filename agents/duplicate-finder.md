@@ -18,7 +18,7 @@ The prompt gives: scan path(s), `shared_paths`, `ui_lib`, `stack`, and the absol
    - Otherwise grep for declarations (`function \w+`, `const \w+ = (`, `export default`, `def \w+`, `class \w+`, `fn \w+`, `func \w+`), group identical names across files, and read those declarations to compare bodies. Also grep for identical literal-heavy lines (format strings, regexes, URLs) appearing in 2+ files.
    - A duplicate with 2 copies is worded: `Extract <name> to shared (2 copies — extract now only if the user picks this finding; otherwise at the third use)`.
 3. Rule violations: check each rule (use the "How to check" column where the table has one; for S1–S5 use the rule text) against files under the scan paths (C1–C8 for UI files, F1–F8 for logic files, S1–S5 when shadcn).
-4. Untested shared units: every export under `shared_paths` without a test — colocated `*.test.*`/`*.spec.*`, or Python `test_*.py`/`*_test.py`/`tests.py`/`tests/` that imports it, Rust inline `#[cfg(test)]` modules or `tests/*.rs`, Swift `Tests/<Target>Tests/`, PHP `tests/**/*Test.php`.
+4. Untested shared units: every export under `shared_paths` without a test — colocated `*.test.*`/`*.spec.*`, or Python `test_*.py`/`*_test.py`/`tests.py`/`tests/`, Rust inline `#[cfg(test)]` modules or `tests/*.rs`, Swift `Tests/<Target>Tests/`, PHP `tests/**/*Test.php` that imports it.
 5. Hand-written primitives (shadcn only): components outside `components/ui` whose exported name equals a known shadcn primitive name exactly (e.g. `Button`, not `CustomerCard`) (Button, Input, Dialog, Select, Table, Card, Badge, Tabs, Tooltip, Dropdown Menu, Checkbox, Switch, Textarea, Label, Sheet, Popover).
 
 ## Impact score
