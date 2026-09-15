@@ -127,6 +127,8 @@ Cases `01`, `02`, `04`, `10`, `11`, `15-setup-detects-django` — 1 run each, wi
 ### 6.4 Sandbox toolchain probe (first plan task)
 Verify inside `claude plugin eval` that `cargo` and `swift` run (the sandbox hid `~/.local/bin` in phase 1). If a toolchain is unavailable in the sandbox: that fixture's `commands.test` becomes `""`, its tests-green graders are replaced by `Verified:[^\n]*T2 skipped`, and the decision is recorded.
 
+**Probe result (2026-09-15, `evals/00b-harness-toolchains`):** cargo `cargo test --offline` ✗: `error: rustup could not choose a version of cargo to run, because one wasn't specified explicitly, and no default is configured.`; swift ✗: `swift: error: couldn't create cache file '/var/folders/hb/s6_sbf857qg2bxfvv0fdq_g00000gn/T/xcrun_db-KnW1OzqO' (errno=Operation not permitted)`; php ✓.
+
 ## 7. Error handling
 - `composer.json` without Laravel → ecosystem `php` (general rules + Notes)
 - `Cargo.toml` without axum → ecosystem `rust`

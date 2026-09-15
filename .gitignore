@@ -3,3 +3,6 @@ evals/results/
 node_modules/
 .DS_Store
 .superpowers/
+evals/fixtures/**/target/
+evals/fixtures/**/.build/
+evals/fixtures/**/Cargo.lock

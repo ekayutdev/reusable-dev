@@ -1,0 +1,24 @@
+schema_version: "1.0"
+name: 00b-harness-toolchains
+description: The eval sandbox can run cargo, swift and php for the phase 2b fixtures.
+tags: [harness]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: 'Run these four commands with the Bash tool, one Bash call each, exactly as written, and report the exit code of each: `(cd probe-rust && cargo test --offline)`, `(cd probe-swift && swift test)`, `(cd probe-swift && swift test --disable-sandbox)`, `php --version`. Do not edit any file.'
+  max_turns: 10
+  allowed_tools: [Bash, Read]
+runs: 1
+graders:
+  - type: regex
+    name: rust-tests
+    target: trace
+    pattern: 'test result: ok\. 1 passed'
+  - type: regex
+    name: swift-tests
+    target: trace
+    pattern: 'Test run with 1 test in \d+ suites? passed'
+  - type: regex
+    name: php-runs
+    target: trace
+    pattern: 'PHP 8\.\d+\.\d+'
