@@ -31,6 +31,7 @@ pub trait ShipmentTracker: Send + Sync {
     async fn dispatch(&self, id: u64) -> Result<Shipment, DispatchError>;
 }
 
+#[derive(serde::Serialize)]
 pub struct Shipment { pub id: u64 } // domain type, in crates/<domain>
 
 #[derive(Clone)]
@@ -45,7 +46,7 @@ async fn dispatch_shipment(
     Ok(Json(state.tracker.dispatch(id).await?))
 }
 
-// Router::new().route("/shipments/{id}/dispatch", get(dispatch_shipment)).with_state(state);
+// Router::new().route("/shipments/{id}/dispatch", post(dispatch_shipment)).with_state(state);
 ```
 - Domain functions stay pure and synchronous where possible — an async boundary is needed only at I/O calls; `error_style: result` is the natural default.
 - F6: domain crates return `Result<T, DomainError>`; `thiserror` derives the error type, a wrapper in `crates/api` converts it to a response (docs.rs/thiserror, Example; docs.rs/axum, response/IntoResponse → Implementing `IntoResponse`):
