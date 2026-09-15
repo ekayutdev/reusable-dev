@@ -28,9 +28,9 @@
 skills/reusable-dev/references/stacks/
 ├── node-ts.md        (มีอยู่แล้ว — core ของ Node)
 ├── nestjs.md         ← บรรทัดหลัง research comment: "Read node-ts.md first."
-├── python-core.md    ← ใหม่: ใช้ร่วมทุก Python stack; ใช้เดี่ยวเมื่อ stack = python
-├── fastapi.md        ← "Read python-core.md first."
-└── django.md         ← "Read python-core.md first."
+├── python.md         ← ใหม่: ใช้ร่วมทุก Python stack; ใช้เดี่ยวเมื่อ stack = python
+├── fastapi.md        ← "Read python.md first."
+└── django.md         ← "Read python.md first."
 ```
 
 ทุกไฟล์ใช้ section ตาม `stacks/_template.md`, ≤ 150 บรรทัด, ภาษาอังกฤษ, บรรทัดแรก `<!-- researched 2026-09-15: <lib>@<version>, … -->` จากเอกสารทางการ (nestjs.com, fastapi.tiangolo.com, docs.djangoproject.com, docs.python.org)
@@ -40,16 +40,18 @@ skills/reusable-dev/references/stacks/
 ### 3.1 Detection ใน `references/config-format.md`
 ตารางมีกฎ **ใช้แถวแรกที่ตรง (บนลงล่าง)**:
 
+Python web frameworks (rows 4–5) come before JS rows 6–8 because Django and FastAPI projects often keep a package.json only for asset tooling.
+
 | ลำดับ | Signal | Value |
 |---|---|---|
 | 1 | `next.config.*` / `"next"` | `react-next` |
 | 2 | `nuxt.config.*` / `"nuxt"` / `"vue"` | `vue-nuxt` |
 | 3 | `svelte.config.*` / `"@sveltejs/kit"` | `sveltekit` |
-| 4 | `"react"` without next | `react-next` |
-| 5 | `"@nestjs/core"` in deps or `nest-cli.json` | `nestjs` |
-| 6 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework | `node-ts` |
-| 7 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `django` |
-| 8 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `fastapi` |
+| 4 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `django` |
+| 5 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `fastapi` |
+| 6 | `"react"` without next | `react-next` |
+| 7 | `"@nestjs/core"` in deps or `nest-cli.json` | `nestjs` |
+| 8 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework | `node-ts` |
 | 9 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `python` |
 
 แถว ui_lib, commands, monorepo path map คงเดิม
@@ -74,7 +76,7 @@ Shared paths เริ่มต้นฝั่ง Python (ใช้ตัวแ�
 
 ## 4. เนื้อหา references
 
-### `python-core.md`
+### `python.md`
 - Reuse units: domain module (`pricing.py`), service class, `typing.Protocol` interfaces
 - Logic idioms: F2 constructor/parameter injection typed by `Protocol`; F6 `throw` = domain exception classes, `result` = `Ok`/`Err` dataclasses; F7 type hints on public functions
 - Testing: `python3 -m unittest path.to.test_module` / `pytest path/to/test_x.py`
@@ -139,7 +141,7 @@ Only via `evals/lib/run-eval.sh`, one case or small group at a time (Docker Desk
 
 ## 7. Error handling
 - Stack detected but reference file missing → existing rule (general rules + Notes)
-- `python` (no framework) → load `python-core.md` only
+- `python` (no framework) → load `python.md` only
 - Django + FastAPI in one project → `django` (row order)
 - Python command signals missing → `commands.test` = `python3 -m unittest`, reported as run or `skipped`
 

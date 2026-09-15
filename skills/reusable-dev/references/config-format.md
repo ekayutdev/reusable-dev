@@ -33,23 +33,25 @@ skills:                      # optional extension points; [] = built-in fallback
 
 Use the first row that matches, top to bottom.
 
+Python web frameworks (rows 4–5) come before JS rows 6–8 because Django and FastAPI projects often keep a package.json only for asset tooling.
+
 | # | Signal | Value |
 |---|---|---|
 | 1 | `next.config.*` or `"next"` in package.json deps | `stack: react-next` |
 | 2 | `nuxt.config.*` or `"nuxt"` / `"vue"` in deps | `stack: vue-nuxt` |
 | 3 | `svelte.config.*` or `"@sveltejs/kit"` in deps | `stack: sveltekit` |
-| 4 | `"react"` in deps without next | `stack: react-next` |
-| 5 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
-| 6 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework (tsconfig.json optional) | `stack: node-ts` |
-| 7 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `stack: django` |
-| 8 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `stack: fastapi` |
+| 4 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `stack: django` |
+| 5 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `stack: fastapi` |
+| 6 | `"react"` in deps without next | `stack: react-next` |
+| 7 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
+| 8 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework (tsconfig.json optional) | `stack: node-ts` |
 | 9 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `stack: python` |
 | – | `components.json` + react / vue / svelte | `ui_lib: shadcn-react` / `shadcn-vue` / `shadcn-svelte` |
 | – | package.json `scripts` named `typecheck`/`type-check`, `lint`, `test`, `build`, `e2e`/`test:e2e` | `commands.*` = `<pm> run <script>` using the lockfile's package manager |
 | – | Python: `pytest` in deps → `commands.test: pytest`; else `manage.py` → `python manage.py test`; else `python3 -m unittest` | `commands.test` |
 | – | Multiple `apps/*` or `packages/*` with different signals | path map for `stack` |
 
-`stack: python` loads `stacks/python-core.md`.
+`stack: python` loads `stacks/python.md`.
 
 A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (written by `/reusable-dev:reuse-setup`); the skill reads that location too. Shared paths: prefer existing dirs in this order — `src/shared/ui`, `src/components/shared`, `src/components/common`, `packages/ui/src` for components; `src/shared/lib`, `src/lib`, `packages/shared/src` for functions. Ignore the ui-lib primitives dir (`components/ui`) — it is covered by `ui_lib`.
 
@@ -60,7 +62,7 @@ A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (writt
 | JS/TS | `src/`, `app/`, `lib/`, `components/`, `composables/`, `hooks/`, `utils/`, `stores/`, `server/`, `shared/`, `apps/*`, `packages/*` | `node_modules`, `dist`, `build`, `.next`, `.nuxt`, `.svelte-kit` |
 | Python | `src/`, `app/`, every root package with `__init__.py` or `apps.py` | `.venv`, `venv`, `__pycache__`, `migrations/`, `.pytest_cache`, `.mypy_cache` |
 
-Python shared paths (first that exists): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`.
+Python shared paths (first that exists, as `shared_paths.functions`): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`; `shared_paths.components` is `common/templates` for Django, otherwise `""`.
 
 ## Missing config (skill step 0)
 

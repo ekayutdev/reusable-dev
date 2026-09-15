@@ -4,7 +4,7 @@
 Node.js + TypeScript backend (no UI framework; server framework optional).
 
 ## Detection
-`tsconfig.json` plus a server framework (`express`, `fastify`, `@nestjs/core`, `hono`) in deps, or no UI framework at all.
+`tsconfig.json` plus a server framework (`express`, `fastify`, `hono`) in deps, or no UI framework at all. (NestJS projects use `stacks/nestjs.md`)
 
 ## Reuse units
 - Pure function/domain: one module per domain area, `src/domain/money.ts`, `src/domain/invoiceTotals.ts` (verb + noun exports).

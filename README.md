@@ -25,7 +25,7 @@ Reuse-first development for Claude Code. Stack-agnostic, works alone or alongsid
 | `/reusable-dev:reuse-registry [--sync] [--shadcn-registry]` | แสดง diff กับโค้ดจริง · `--sync` เขียนทะเบียน · `--shadcn-registry` สร้าง registry ของ shadcn / show diff; `--sync` writes it; `--shadcn-registry` generates a shadcn registry source |
 | `/reusable-dev:reuse-verify [path or 'all']` | ตรวจครบ T1–T4 |
 
-## รองรับ / Supported (phase 1)
+## รองรับ / Supported
 
 Stacks: React/Next.js · Vue/Nuxt · SvelteKit · Node/TypeScript · NestJS · FastAPI · Django
 UI libraries: shadcn/ui (`shadcn-react`) · shadcn-vue (`shadcn-vue`) · shadcn-svelte (`shadcn-svelte`)
