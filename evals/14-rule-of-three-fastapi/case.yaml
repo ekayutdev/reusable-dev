@@ -1,0 +1,49 @@
+schema_version: "1.0"
+name: 14-rule-of-three-fastapi
+description: FastAPI — a third money-formatting need extracts the duplicated helper to shared and keeps tests green.
+tags: [phase2a, fastapi]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a balance_label(customer) function for customers that shows the outstanding balance formatted like the order and invoice labels, with a unittest test."
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: "app/(shared|domain)/[^\\n]*\\.py"
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: app/services/orders.py }
+    pattern: "def format_money"
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: app/services/invoices.py }
+    pattern: "def format_money"
+    match: not_contains
+  - type: regex
+    name: imports-shared
+    target: trace
+    pattern: "from app\\.(shared|domain)[\\w.]* import"
+  - type: regex
+    name: tests-green
+    target: trace
+    pattern: "Ran \\d+ tests?[\\s\\S]*?OK\\b"
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: tests/test_orders.py }
+    pattern: "Order total: \\$25\\.00"
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: tests/test_invoices.py }
+    pattern: "Amount due: \\$3\\.50"
+  - type: regex
+    name: reports-create
+    pattern: "Reuse decision:\\s*Create"
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"
