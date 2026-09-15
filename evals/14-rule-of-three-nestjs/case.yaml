@@ -1,0 +1,53 @@
+schema_version: "1.0"
+name: 14-rule-of-three-nestjs
+description: NestJS — a third money-formatting need extracts the duplicated helper to src/common and keeps tests green.
+tags: [phase2a, nestjs]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a balanceLabel(customer) function in src/customers/customer-balance.ts that returns text like \"Balance: $12.50\" from customer.balanceCents, with a node:test test in src/customers/customer-balance.test.ts."
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: "src/(common|shared)/[^\\n]*\\.ts"
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: src/orders/order-pricing.ts }
+    pattern: "function formatMoney"
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: src/invoices/invoice-pricing.ts }
+    pattern: "function formatMoney"
+    match: not_contains
+  - type: regex
+    name: imports-shared
+    target: { source: file, path: src/customers/customer-balance.ts }
+    pattern: "from\\s+[\"'][^\"']*(common|shared)/"
+  - type: regex
+    name: tests-green
+    target: trace
+    pattern: "(#|ℹ) fail 0"
+  - type: regex
+    name: new-test-counted
+    target: trace
+    pattern: "(#|ℹ) pass (?:[3-9]|\\d{2,})"
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: src/orders/order-pricing.test.ts }
+    pattern: "Order total: \\$25\\.00"
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: src/invoices/invoice-pricing.test.ts }
+    pattern: "Amount due: \\$3\\.50"
+  - type: regex
+    name: reports-create
+    pattern: "Reuse decision:\\s*Create"
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"

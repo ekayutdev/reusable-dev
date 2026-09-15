@@ -1,0 +1,32 @@
+schema_version: "1.0"
+name: 15-setup-detects-nestjs
+description: /reuse-setup detects the NestJS stack and npm test command (graded on the write attempt; the eval sandbox denies .claude/** writes).
+tags: [phase2a, nestjs]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "/reusable-dev:reuse-setup  (non-interactive: accept all detected defaults, leave unknown extension points empty)"
+  max_turns: 30
+  allowed_tools: [Read, Glob, Grep, Bash, Write, Edit]
+graders:
+  - type: tool_used
+    name: attempted-config-write
+    tool: Write
+    input_match: "reusable-dev\\.md"
+    min: 1
+  - type: tool_used
+    name: config-has-nestjs
+    tool: Write
+    input_match: "stack:\\s*nestjs"
+    min: 1
+  - type: tool_used
+    name: config-has-npm-test-command
+    tool: Write
+    input_match: "test:\\s*\\\\?\"?(npm|pnpm|yarn|bun) (run )?test"
+    min: 1
+  - type: tool_used
+    name: no-bash-config-workaround
+    tool: Bash
+    input_match: "reusable-dev\\.md"
+    min: 0
+    max: 0

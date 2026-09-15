@@ -1,0 +1,7 @@
+{
+  "name": "fixture-nestjs",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test" },
+  "dependencies": { "@nestjs/common": "^11.0.0", "@nestjs/core": "^11.0.0" }
+}
