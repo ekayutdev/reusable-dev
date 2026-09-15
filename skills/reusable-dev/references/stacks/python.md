@@ -9,11 +9,11 @@ Python core (no web framework). Framework stacks (Django, FastAPI) have their ow
 ## Reuse units
 - Pure function/domain: one module per domain area, named by domain — `pricing.py`, `dates.py` (verb + noun exports).
 - Service class: groups related IO-orchestrating methods behind a constructor-injected client.
-- `typing.Protocol`: a structural interface — name it after the role (`Clock`, `OrderStore`) and depend on it, not on a concrete class.
+- `typing.Protocol`: a structural interface — name it after the role (`Clock`, `ReportStore`) and depend on it, not on a concrete class.
 - Frozen dataclass: immutable value object (`@dataclass(frozen=True)`).
 
 ## Paths
-- `src/<pkg>/` layout, or a root package next to the tests; shared code in `common/`, `core/`, or `shared/` (per config `shared_paths.functions`).
+- `src/<pkg>/` layout, or a root package next to the tests; shared code in `common/`, `core/`, `shared/`, `app/shared/`, or `src/<pkg>/shared/` (per config `shared_paths.functions`).
 - Domain modules import nothing that does IO. Services receive clients via constructor or parameters.
 
 ## Component idioms
@@ -25,18 +25,18 @@ Not applicable — no UI. C3–C6 (variant enums, children/slots, rest props/ref
 from typing import Protocol
 
 
-class OrderStore(Protocol):
-    def get(self, order_id: str) -> Order: ...
+class ReportStore(Protocol):
+    def get(self, report_id: str) -> "Report": ...
 
 
-class OrderService:
-    def __init__(self, store: OrderStore) -> None:
+class ReportService:
+    def __init__(self, store: ReportStore) -> None:
         self._store = store   # client arrives as an argument, never an import inside logic
 ```
 - F6 `throw` = domain exception classes; `result` = `Ok`/`Err` dataclasses. Pick ONE per config `error_style`, never mix in one module.
 ```python
 # throw style
-class OrderNotFoundError(Exception):
+class ReportNotFoundError(Exception):
     pass
 
 
@@ -47,7 +47,7 @@ from typing import Union
 
 @dataclass(frozen=True)
 class Ok:
-    value: "Order"
+    value: "Report"
 
 
 @dataclass(frozen=True)

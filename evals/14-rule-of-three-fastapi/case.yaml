@@ -5,7 +5,7 @@ tags: [phase2a, fastapi]
 context:
   scaffold_script: setup.sh
 execution:
-  prompt: "Add a balance_label(customer) function for customers that shows the outstanding balance formatted like the order and invoice labels, with a unittest test."
+  prompt: "Add a balance_label(customer) function in app/services/customers.py that returns text like \"Balance: $12.50\" from customer.balance_cents, with a unittest test in tests/test_customers.py."
   max_turns: 40
   allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
 graders:
@@ -25,12 +25,12 @@ graders:
     match: not_contains
   - type: regex
     name: imports-shared
-    target: trace
+    target: { source: file, path: app/services/customers.py }
     pattern: "from app\\.(shared|domain)[\\w.]* import"
   - type: regex
     name: tests-green
     target: trace
-    pattern: "Ran \\d+ tests?[\\s\\S]*?OK\\b"
+    pattern: "Ran \\d+ tests? in [\\d.]+s(?:\\\\n|\\s)+OK\\b"
   - type: regex
     name: orders-assertion-kept
     target: { source: file, path: tests/test_orders.py }

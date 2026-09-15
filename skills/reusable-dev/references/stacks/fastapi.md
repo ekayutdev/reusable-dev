@@ -22,28 +22,30 @@ FastAPI backend. All rules from python.md apply; this file adds the router/servi
 Not applicable — no UI. C3–C6 have no FastAPI equivalent; apply component-design.md only where a UI stack exists in the same repo.
 
 ## Logic idioms
-- F2 DI: routers and services receive collaborators via `Depends()` providers — never construct clients inside a path operation (fastapi.tiangolo.com/tutorial/dependencies).
+- F2 DI: services receive collaborators via constructor/parameter injection (per python.md); only path operations and dependency providers use `Depends()` (fastapi.tiangolo.com/tutorial/dependencies).
 ```python
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 
-from app.services.orders import OrderService
-from app.dependencies import get_order_service
+from app.dependencies import get_report_service
+from app.services.reports import ReportService
 
 router = APIRouter()
 
 
-@router.post("/orders/label")
-def label(
-    lines: list[tuple[int, int]],
-    service: OrderService = Depends(get_order_service),
+@router.post("/reports/summary")
+def summary(
+    buckets: list[str],
+    service: Annotated[ReportService, Depends(get_report_service)],
 ) -> dict[str, str]:
-    return {"label": service.label(lines)}   # path operation stays thin
+    return {"summary": service.summarize(buckets)}   # path operation stays thin
 ```
 - Thin routers: parse and validate input, delegate to a service, shape the response. Business logic in a path operation body is a copy no CLI or job can reuse.
 
 ## Testing
 - Pure services and domain functions: unittest or pytest, no FastAPI involved — `python3 -m unittest discover -s tests -t .` or `pytest tests/test_services.py`.
-- Routes: `fastapi.testclient.TestClient` — `client = TestClient(app)` then `client.post("/orders/label", json=...)` (fastapi.tiangolo.com/tutorial/testing; requires `httpx` installed).
+- Routes: `fastapi.testclient.TestClient` — `client = TestClient(app)` then `client.post("/reports/summary", json=...)` (fastapi.tiangolo.com/tutorial/testing; requires `httpx` installed).
 - Single-file commands per config `commands.test`; use exactly what is configured.
 
 ## Stack-specific anti-patterns
