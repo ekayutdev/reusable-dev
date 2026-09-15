@@ -14,7 +14,7 @@ Report only what you ran, with the real result. A tier with no command is `skipp
 ## Finding call sites (T3)
 
 1. Use LSP find-references on the exported symbol if an LSP tool is available.
-2. Otherwise grep for the import path without extension (e.g. `shared/lib/money`), its dotted Python form (e.g. `shared.money`), the Rust path form (e.g. `crate::money` / `shared::money`), Swift `import <Module>`, the PHP namespace form (e.g. `App\Support\Money`), and the symbol name.
+2. Otherwise grep for the import path without extension (e.g. `shared/lib/money`), its dotted Python form (e.g. `shared.money`), the Rust path form (e.g. `crate::money` / `shared::money`), Swift `import <Module>`, the PHP namespace form (e.g. `App\Support\Money` — search it as a fixed string, e.g. `rg -F`), and the symbol name.
 3. For each caller, run its tests: colocated `*.test.*`, `*.spec.*`, `__tests__/`, Python `test_*.py`, `*_test.py`, `tests.py`, `tests/`, Rust inline `#[cfg(test)]` modules or `tests/*.rs`, Swift `Tests/<Target>Tests/`, PHP `tests/**/*Test.php`. If the test runner cannot target files, run the full `commands.test` once.
 4. Caller with no test → list it under Notes as `untested call site: <path>`.
 
@@ -24,7 +24,7 @@ Report only what you ran, with the real result. A tier with no command is `skipp
 Verified: T1 typecheck ✓ lint skipped (no command) · T2 4 tests ✓ · T3 2 call sites, 3 tests ✓
 ```
 Failure: `T2 1 failing (money.test.ts: formats USD)` and stop to debug — do not claim done.
-Not applicable: `T3 n/a (no shared unit changed)`. Non-shared touched unit without tests: `T2 no tests for <path>`. A shared unit without a test is not done — go back to step 3 (test first). If `commands.test` is empty, still write the test, report `T2 skipped (no command)`, and add `test written but not run` to Notes.
+Not applicable: `T3 n/a (no shared unit changed)`. Non-shared touched unit without tests: `T2 no tests for <path>`. A shared unit without a test is not done — go back to step 3 (test first). If `commands.test` is empty, run no test command at all — not a stack reference's example command, not a guessed runner — still write the test, report `T2 skipped (no command)`, and add `test written but not run` to Notes.
 Tiers after a stop: `not run (stopped at Tn)`.
 
 ## Built-in fallbacks (used when the extension point is empty or its skill is missing)

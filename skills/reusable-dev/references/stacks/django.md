@@ -70,7 +70,7 @@ class Tenant(models.Model):
 ## Testing
 - `python3 manage.py test reports.tests.test_summary` — one app, module, class, or method (docs.djangoproject.com/en/stable/topics/testing/overview).
 - Plain-Python services in `services.py` test with `unittest` alone, no Django settings — per python.md.
-- Use exactly what config `commands.test` specifies.
+- Use exactly what config `commands.test` specifies; if it is empty, run no test command and report `T2 skipped (no command)` (commands above are examples for filling the config).
 
 ## Stack-specific anti-patterns
 - Fat views — parse and delegate in the view; logic goes to a service.

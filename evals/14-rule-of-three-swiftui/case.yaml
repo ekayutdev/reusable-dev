@@ -32,9 +32,17 @@ graders:
     target: { source: file, path: Package.swift }
     pattern: 'name:\s*"Shared"'
   - type: regex
-    name: shared-target-depended-on
+    name: customers-depends-on-shared
     target: { source: file, path: Package.swift }
-    pattern: 'dependencies:\s*\[[^\]]*"Shared"'
+    pattern: 'name:\s*"Customers",\s*dependencies:\s*\[[^\]]*"Shared"'
+  - type: regex
+    name: orders-depends-on-shared
+    target: { source: file, path: Package.swift }
+    pattern: 'name:\s*"Orders",\s*dependencies:\s*\[[^\]]*"Shared"'
+  - type: regex
+    name: invoices-depends-on-shared
+    target: { source: file, path: Package.swift }
+    pattern: 'name:\s*"Invoices",\s*dependencies:\s*\[[^\]]*"Shared"'
   - type: regex
     name: reports-t2-skipped
     pattern: 'Verified:[^\n]*T2 skipped'

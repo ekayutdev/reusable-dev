@@ -27,9 +27,14 @@ graders:
     name: imports-shared
     target: { source: file, path: crates/billing/src/customers.rs }
     pattern: '(crate|super)::(money|shared)\b|\bshared::'
-  - type: llm
+  - type: regex
     name: shared-helper-wired
-    criteria: "The extracted money-formatting helper is wired so the workspace would compile: EITHER crates/billing/src/lib.rs declares the new module (e.g. `mod money;` / `pub mod money;` / `mod shared;`) OR a new crates/shared crate exists, is listed in the root Cargo.toml workspace `members`, and crates/billing/Cargo.toml depends on it by `path`; AND the helper function is visible to its callers (`pub` or `pub(crate)`)."
+    target: trace
+    pattern: 'mod (money|shared)\s*;|members\s*=\s*\[[^\]]*crates/shared'
+  - type: regex
+    name: shared-helper-public
+    target: trace
+    pattern: 'pub(\(crate\))?\s+fn format_money'
   - type: regex
     name: reports-t2-skipped
     pattern: 'Verified:[^\n]*T2 skipped'

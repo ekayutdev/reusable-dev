@@ -46,7 +46,7 @@ def summary(
 ## Testing
 - Pure services and domain functions: unittest or pytest, no FastAPI involved — `python3 -m unittest discover -s tests -t .` or `pytest tests/test_services.py`.
 - Routes: `fastapi.testclient.TestClient` — `client = TestClient(app)` then `client.post("/reports/summary", json=...)` (fastapi.tiangolo.com/tutorial/testing; requires `httpx` installed).
-- Single-file commands per config `commands.test`; use exactly what is configured.
+- Single-file commands per config `commands.test`; use exactly what is configured. If it is empty, run no test command and report `T2 skipped (no command)`.
 
 ## Stack-specific anti-patterns
 - Business logic inside path operations — move it to a service the router calls.

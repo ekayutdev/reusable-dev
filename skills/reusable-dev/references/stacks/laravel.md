@@ -66,7 +66,7 @@ public function register(): void
 ## Testing
 - Pest or PHPUnit, both shipped out of the box (laravel.com/docs/12.x/testing).
 - One file: `php artisan test tests/Feature/ShipmentTest.php` or `vendor/bin/pest tests/Unit/DateRangeTest.php` (pestphp.com/docs/filtering-tests).
-- Use exactly what config `commands.test` specifies.
+- Use exactly what config `commands.test` specifies; if it is empty, run no test command and report `T2 skipped (no command)` (commands above are examples for filling the config).
 
 ## Stack-specific anti-patterns
 - Fat controllers — parse and delegate; logic goes to an Action or service.

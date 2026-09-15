@@ -24,7 +24,7 @@ axum web service (tokio, tower). No language core file — the general rules plu
 Not applicable — no UI.
 
 ## Logic idioms
-- F2: handlers receive `State<AppState>` and delegate; state holds collaborators behind `#[async_trait::async_trait]` traits, constructed once in `main` (docs.rs/axum, extract/State → With `Router`). A native `async fn` in a trait is not usable behind `dyn` (dyn-incompatible) and its generic future is not known to be `Send`; `async_trait` (crate `async-trait = "0.1"`, impls carry the attribute too; the domain type needs `serde = { version = "1", features = ["derive"] }` for the response body) boxes a `Send` future so `Arc<dyn ShipmentTracker + Send + Sync>` works. Alternatives: a generic service `S: ShipmentTracker + Send + Sync + 'static`, or a synchronous collaborator.
+- F2: handlers receive `State<AppState>` and delegate; state holds collaborators behind `#[async_trait::async_trait]` traits, constructed once in `main` (docs.rs/axum, extract/State → With `Router`). A native `async fn` in a trait is not usable behind `dyn` (dyn-incompatible) and its generic future is not known to be `Send`; `async_trait` (crate `async-trait = "0.1"`, impls carry the attribute too) boxes a `Send` future so `Arc<dyn ShipmentTracker + Send + Sync>` works. Returning `Json<T>` needs `T: serde::Serialize` (`serde = { version = "1", features = ["derive"] }`). Alternatives: a generic service `S: ShipmentTracker + Send + Sync + 'static`, or a synchronous collaborator.
 ```rust
 #[async_trait::async_trait]
 pub trait ShipmentTracker: Send + Sync {
@@ -80,7 +80,7 @@ impl IntoResponse for ApiError {
 - `cargo test -p <crate>` for one crate; `cargo test <name>` for one test (doc.rust-lang.org/book/ch11-02-running-tests, Running a Subset of Tests by Name).
 - Unit tests in a `#[cfg(test)] mod tests` beside the code, `use super::*;` — private functions testable (doc.rust-lang.org/book/ch11-03-test-organization).
 - Handler tests call the router directly with `tower::ServiceExt::oneshot`, no HTTP server (docs.rs/tower, ServiceExt::oneshot) — needs `tower` as a dev-dependency with the `util` feature, and `http-body-util` to read bodies.
-- Use exactly what config `commands.test` specifies.
+- Use exactly what config `commands.test` specifies; if it is empty, run no test command and report `T2 skipped (no command)` (commands above are examples for filling the config).
 
 ## Stack-specific anti-patterns
 - Business logic in handlers — a handler extracts and delegates; logic goes to a domain crate.
