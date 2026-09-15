@@ -14,8 +14,8 @@ Report only what you ran, with the real result. A tier with no command is `skipp
 ## Finding call sites (T3)
 
 1. Use LSP find-references on the exported symbol if an LSP tool is available.
-2. Otherwise grep for the import path without extension (e.g. `shared/lib/money`), its dotted Python form (e.g. `shared.money`), and the symbol name.
-3. For each caller, run its tests: colocated `*.test.*`, `*.spec.*`, `__tests__/`, or Python `test_*.py`, `*_test.py`, `tests.py`, `tests/`. If the test runner cannot target files, run the full `commands.test` once.
+2. Otherwise grep for the import path without extension (e.g. `shared/lib/money`), its dotted Python form (e.g. `shared.money`), the Rust path form (e.g. `crate::money` / `shared::money`), Swift `import <Module>`, the PHP namespace form (e.g. `App\Support\Money`), and the symbol name.
+3. For each caller, run its tests: colocated `*.test.*`, `*.spec.*`, `__tests__/`, Python `test_*.py`, `*_test.py`, `tests.py`, `tests/`, Rust inline `#[cfg(test)]` modules or `tests/*.rs`, Swift `Tests/<Target>Tests/`, PHP `tests/**/*Test.php`. If the test runner cannot target files, run the full `commands.test` once.
 4. Caller with no test → list it under Notes as `untested call site: <path>`.
 
 ## Report format

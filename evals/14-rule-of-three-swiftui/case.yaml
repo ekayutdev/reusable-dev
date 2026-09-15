@@ -1,6 +1,6 @@
 schema_version: "1.0"
 name: 14-rule-of-three-swiftui
-description: SwiftUI — a third money-formatting need extracts the duplicated helper to a shared SwiftPM target and keeps swift tests green.
+description: SwiftUI — a third money-formatting need extracts the duplicated helper to a shared SwiftPM target and reports T2 skipped (swift is unavailable in the eval sandbox).
 tags: [phase2b, swiftui]
 context:
   scaffold_script: setup.sh
@@ -27,6 +27,14 @@ graders:
     name: imports-shared
     target: { source: file, path: Sources/Customers/CustomerLabel.swift }
     pattern: 'import Shared\b'
+  - type: regex
+    name: shared-target-declared
+    target: { source: file, path: Package.swift }
+    pattern: 'name:\s*"Shared"'
+  - type: regex
+    name: shared-target-depended-on
+    target: { source: file, path: Package.swift }
+    pattern: 'dependencies:\s*\[[^\]]*"Shared"'
   - type: regex
     name: reports-t2-skipped
     pattern: 'Verified:[^\n]*T2 skipped'

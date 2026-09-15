@@ -21,4 +21,4 @@ skills:
   plan: []
   e2e: []
 ---
-Fixture project for reusable-dev evals. A SwiftPM package (macOS 14); each feature is its own target, and new targets must be declared in Package.swift. Tests are not run by evals because swift is unavailable in the eval sandbox; run `swift test` locally.
+Fixture project. A SwiftPM package (macOS 14); each feature is its own target, and new targets must be declared in Package.swift.

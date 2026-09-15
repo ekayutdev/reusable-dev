@@ -1,4 +1,4 @@
-<!-- researched 2026-09-15: axum@0.8.9 (docs.rs/axum: Router, State, extract, IntoResponse, error_handling), thiserror@2.0.20 (docs.rs/thiserror), tower@0.5.3 (docs.rs/tower ServiceExt::oneshot), doc.rust-lang.org/cargo/reference/workspaces, doc.rust-lang.org/book/ch11-03-test-organization -->
+<!-- researched 2026-09-15: axum@0.8.9 (docs.rs/axum: Router, State, extract, IntoResponse, error_handling), thiserror@2.0.20 (docs.rs/thiserror), tower@0.5.3 (docs.rs/tower ServiceExt::oneshot), doc.rust-lang.org/cargo/reference/workspaces, doc.rust-lang.org/book/ch11-02-running-tests, ch11-03-test-organization -->
 
 # Stack: rust-axum
 
@@ -24,7 +24,7 @@ axum web service (tokio, tower). No language core file — the general rules plu
 Not applicable — no UI.
 
 ## Logic idioms
-- F2: handlers receive `State<AppState>` and delegate; state holds collaborators behind `#[async_trait::async_trait]` traits, constructed once in `main` (docs.rs/axum, extract/State → With `Router`). A native `async fn` in a trait is not usable behind `dyn` (dyn-incompatible) and its generic future is not known to be `Send`; `async_trait` (crate `async-trait = "0.1"`, impls carry the attribute too) boxes a `Send` future so `Arc<dyn ShipmentTracker + Send + Sync>` works. Alternatives: a generic service `S: ShipmentTracker + Send + Sync + 'static`, or a synchronous collaborator.
+- F2: handlers receive `State<AppState>` and delegate; state holds collaborators behind `#[async_trait::async_trait]` traits, constructed once in `main` (docs.rs/axum, extract/State → With `Router`). A native `async fn` in a trait is not usable behind `dyn` (dyn-incompatible) and its generic future is not known to be `Send`; `async_trait` (crate `async-trait = "0.1"`, impls carry the attribute too; the domain type needs `serde = { version = "1", features = ["derive"] }` for the response body) boxes a `Send` future so `Arc<dyn ShipmentTracker + Send + Sync>` works. Alternatives: a generic service `S: ShipmentTracker + Send + Sync + 'static`, or a synchronous collaborator.
 ```rust
 #[async_trait::async_trait]
 pub trait ShipmentTracker: Send + Sync {
@@ -77,9 +77,9 @@ impl IntoResponse for ApiError {
 - Extractors run left to right and a body extractor must be last — one body per handler (docs.rs/axum, extract → The order of extractors).
 
 ## Testing
-- `cargo test -p <crate>` for one crate; `cargo test <name>` for one test (doc.rust-lang.org/book/ch11-03-test-organization, Unit Tests).
+- `cargo test -p <crate>` for one crate; `cargo test <name>` for one test (doc.rust-lang.org/book/ch11-02-running-tests, Running a Subset of Tests by Name).
 - Unit tests in a `#[cfg(test)] mod tests` beside the code, `use super::*;` — private functions testable (doc.rust-lang.org/book/ch11-03-test-organization).
-- Handler tests call the router directly with `tower::ServiceExt::oneshot`, no HTTP server (docs.rs/tower, ServiceExt::oneshot).
+- Handler tests call the router directly with `tower::ServiceExt::oneshot`, no HTTP server (docs.rs/tower, ServiceExt::oneshot) — needs `tower` as a dev-dependency with the `util` feature, and `http-body-util` to read bodies.
 - Use exactly what config `commands.test` specifies.
 
 ## Stack-specific anti-patterns

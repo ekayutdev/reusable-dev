@@ -21,4 +21,4 @@ skills:
   plan: []
   e2e: []
 ---
-Fixture project for reusable-dev evals. The workspace excludes crates/api (axum is not in the offline cargo cache); tests run for workspace members only. Tests are not run by evals because cargo is unavailable in the eval sandbox; run `cargo test --offline` locally.
+Fixture project. The workspace excludes crates/api (axum is not in the offline cargo cache).

@@ -75,6 +75,6 @@ func loadShipment() throws(ShipmentError) -> Shipment { /* ... */ }
 ## Stack-specific anti-patterns
 - Logic in `body` — move to a model or pure function; body renders.
 - Copy-pasted modifier chains — extract a `ViewModifier` + `View` extension.
-- Creating an `@ObservedObject` or `@Observable` model inside a view — the view does not own it and it is recreated on redraw; own it with `@StateObject` / `@State`, or inject it from a parent.
+- Creating an `@ObservedObject` or `@Observable` model in a view's init or body without `@StateObject` / `@State` — the view does not own it and it is recreated on redraw; own it with `@StateObject` / `@State`, or inject it from a parent.
 - Massive views — split into small `View` structs and `@ViewBuilder` sections.
 - A shared target importing feature targets — dependencies point feature → shared, never back.

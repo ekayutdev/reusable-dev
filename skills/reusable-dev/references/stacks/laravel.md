@@ -29,8 +29,8 @@ Laravel backend (Eloquent, Blade, service container). No language core file — 
 ```
 Called as `<x-button variant="outline">Save</x-button>` — the caller's `class` merges with the defaults (laravel.com/docs/12.x/blade, Component Attributes).
 - C4: default content is `{{ $slot }}`; named slots via `<x-slot:title>` (laravel.com/docs/12.x/blade, Slots).
-- C5: forward caller attributes on the root element with `{{ $attributes }}` — merge defaults, never drop them.
-- C6: a controlled input carries `name` and `value` / `old('field', $default)`; uncontrolled takes the default attribute only.
+- C5: forward caller attributes on the root element with `{{ $attributes }}` — merge defaults, never drop them; refs do not apply to server-rendered Blade.
+- C6: controlled = value from `old('field', $default)` passed via `value` + `name`; uncontrolled = default from the component prop only; server-rendered Blade has no client change event (Livewire/Alpine are out of scope).
 - No copy-and-tweak components (`button_danger.blade.php` beside `button.blade.php`); C7: variants map to classes, no hardcoded colors.
 
 ## Logic idioms
@@ -61,7 +61,7 @@ public function register(): void
     });
 })
 ```
-- Pure helpers: `final` classes or plain functions with typed signatures in `app/Support` — no facades, unit-testable without booting Laravel.
+- Pure helpers: static-free `final` classes (autoloaded by PSR-4); plain functions only when the file is registered in `composer.json` `autoload.files` (then `composer dump-autoload`) — typed signatures in `app/Support`, no facades, unit-testable without booting Laravel.
 
 ## Testing
 - Pest or PHPUnit, both shipped out of the box (laravel.com/docs/12.x/testing).

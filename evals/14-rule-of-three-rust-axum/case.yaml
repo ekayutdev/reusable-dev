@@ -1,6 +1,6 @@
 schema_version: "1.0"
 name: 14-rule-of-three-rust-axum
-description: Rust axum — a third money-formatting need extracts the duplicated helper to a shared crate or module and keeps cargo tests green.
+description: Rust axum — a third money-formatting need extracts the duplicated helper to a shared crate or module and reports T2 skipped (cargo is unavailable in the eval sandbox).
 tags: [phase2b, rust-axum]
 context:
   scaffold_script: setup.sh
@@ -27,6 +27,9 @@ graders:
     name: imports-shared
     target: { source: file, path: crates/billing/src/customers.rs }
     pattern: '(crate|super)::(money|shared)\b|\bshared::'
+  - type: llm
+    name: shared-helper-wired
+    criteria: "The extracted money-formatting helper is wired so the workspace would compile: EITHER crates/billing/src/lib.rs declares the new module (e.g. `mod money;` / `pub mod money;` / `mod shared;`) OR a new crates/shared crate exists, is listed in the root Cargo.toml workspace `members`, and crates/billing/Cargo.toml depends on it by `path`; AND the helper function is visible to its callers (`pub` or `pub(crate)`)."
   - type: regex
     name: reports-t2-skipped
     pattern: 'Verified:[^\n]*T2 skipped'
