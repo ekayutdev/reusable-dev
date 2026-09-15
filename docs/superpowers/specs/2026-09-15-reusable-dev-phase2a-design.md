@@ -1,7 +1,7 @@
 # reusable-dev Phase 2a — NestJS, FastAPI, Django — Design Spec
 
 - **วันที่:** 2026-09-15
-- **สถานะ:** Approved design, รอรีวิว spec
+- **สถานะ:** Implemented (phase 2a)
 - **ต่อจาก:** `docs/superpowers/specs/2026-09-14-reusable-dev-plugin-design.md` (Phase 1, merged)
 
 ## 1. เป้าหมาย
