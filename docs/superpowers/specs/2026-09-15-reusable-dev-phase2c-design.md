@@ -107,6 +107,8 @@ Throwaway case (not committed after recording) runs `dotnet test` on a minimal c
 - Only the env variant ✓ → fixture `commands.test` uses that variant; case 15 still expects `dotnet test`
 - Both ✗ → fixture `commands.test: ""`; `tests-green` replaced by `reports-t2-skipped` (`Verified:[^\n]*T2 skipped`); plus a static wiring grader: a new project must appear in `tests/Billing.Tests/Billing.Tests.csproj` or `src/Billing/Billing.csproj` as a `ProjectReference` — `shared-wired` (trace): `ProjectReference Include="[^"]*Shared[^"]*\.csproj"|src/Billing/(Shared|Common)/` (a folder inside `src/Billing` needs no wiring, SDK-style projects include every `.cs` file)
 
+**Probe result (2026-09-15, temporary case `00c-probe-dotnet`, removed):** plain `dotnet test` ✗: `System.IO.IOException: The system cannot open the device or file specified. : 'NuGet-Migrations'`; env variant ✗: `System.IO.IOException: The system cannot open the device or file specified. : 'NuGet-Migrations'`.
+
 No `llm` grader checks file state (phase 2b lesson: without `focus` it only sees the final message).
 
 ## 7. Error handling

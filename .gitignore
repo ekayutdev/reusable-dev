@@ -6,3 +6,5 @@ node_modules/
 evals/fixtures/**/target/
 evals/fixtures/**/.build/
 evals/fixtures/**/Cargo.lock
+evals/fixtures/**/bin/
+evals/fixtures/**/obj/
