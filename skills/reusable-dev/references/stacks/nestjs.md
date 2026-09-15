@@ -6,7 +6,7 @@ Read node-ts.md first.
 NestJS backend. node-ts.md applies except Reuse units, Paths, and F2 (dependency injection) below, which replace it.
 
 ## Detection
-`@nestjs/core` in `package.json` dependencies, or a `nest-cli.json` present (detection row 7).
+`@nestjs/core` in `package.json` dependencies, or a `nest-cli.json` present (detection row 10).
 
 ## Reuse units
 - Shareable module: a `@Module` class whose `exports` array is its public API — any module importing it gets the same singleton provider instances (docs.nestjs.com/modules, "Shared modules").
