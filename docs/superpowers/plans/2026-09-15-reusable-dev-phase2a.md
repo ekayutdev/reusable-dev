@@ -4,7 +4,7 @@
 
 **Goal:** Add `nestjs`, `fastapi`, `django` stack support to the reusable-dev plugin, with language-aware detection and Discover roots, and eval evidence for each stack.
 
-**Architecture:** Framework reference files point to a language core (`nestjs.md` → existing `node-ts.md`; `fastapi.md`/`django.md` → new `python-core.md`), the same pattern as `ui-libs/shadcn-core.md`. Detection and Discover source roots move into `references/config-format.md` so SKILL.md stays language-neutral. Each stack gets a runnable fixture and two eval cases (Rule of Three behavior, `/reuse-setup` detection).
+**Architecture:** Framework reference files point to a language core (`nestjs.md` → existing `node-ts.md`; `fastapi.md`/`django.md` → new `python.md`), the same pattern as `ui-libs/shadcn-core.md`. Detection and Discover source roots move into `references/config-format.md` so SKILL.md stays language-neutral. Each stack gets a runnable fixture and two eval cases (Rule of Three behavior, `/reuse-setup` detection).
 
 **Tech Stack:** Claude Code plugin (Markdown), `claude plugin eval` via `evals/lib/run-eval.sh`, Node 26 `node --test` (TypeScript type stripping), Python 3.14 stdlib `unittest`.
 
@@ -34,7 +34,7 @@
 skills/reusable-dev/SKILL.md                               Task 1 (Discover step 3)
 skills/reusable-dev/references/config-format.md            Task 1 (detection order, python commands, source roots)
 README.md                                                  Task 1 (stacks line)
-skills/reusable-dev/references/stacks/python-core.md       Task 2
+skills/reusable-dev/references/stacks/python.md       Task 2
 skills/reusable-dev/references/stacks/fastapi.md           Task 2
 skills/reusable-dev/references/stacks/django.md            Task 3
 skills/reusable-dev/references/stacks/nestjs.md            Task 4
@@ -95,7 +95,7 @@ with
 stack: react-next            # react-next | vue-nuxt | sveltekit | node-ts | nestjs | fastapi | django | python, or an ecosystem name (go | php, no reference file), or a path map for monorepos:
 ```
 
-(`python` now has a reference: `stacks/python-core.md`. Also add one sentence after the detection table: `` `stack: python` loads `stacks/python-core.md`. ``)
+(`python` now has a reference: `stacks/python.md`. Also add one sentence after the detection table: `` `stack: python` loads `stacks/python.md`. ``)
 
 - [ ] **Step 3: Add the source roots section**
 
@@ -153,16 +153,16 @@ git commit -m "feat: ordered stack detection and language-aware discover roots"
 
 ---
 
-### Task 2: Python core + FastAPI (reference, fixture, evals)
+### Task 2: Python (language core) + FastAPI (reference, fixture, evals)
 
 **Files:**
-- Create: `skills/reusable-dev/references/stacks/python-core.md`, `skills/reusable-dev/references/stacks/fastapi.md`
+- Create: `skills/reusable-dev/references/stacks/python.md`, `skills/reusable-dev/references/stacks/fastapi.md`
 - Create: `evals/fixtures/fastapi/**` (listed in Step 1)
 - Create: `evals/14-rule-of-three-fastapi/{case.yaml,setup.sh}`, `evals/15-setup-detects-fastapi/{case.yaml,setup.sh}`
 
 **Interfaces:**
 - Consumes: detection row 8, Python commands rule, Python source roots (Task 1).
-- Produces: `python-core.md` (Task 3 `django.md` starts with `Read python-core.md first.`).
+- Produces: `python.md` (Task 3 `django.md` starts with `Read python.md first.`).
 
 - [ ] **Step 1: Create the fixture**
 
@@ -402,7 +402,7 @@ graders:
 Run: `evals/lib/run-eval.sh --runs 1 --case "14-rule-of-three-fastapi"` then `evals/lib/run-eval.sh --runs 1 --case "15-setup-detects-fastapi"`
 Record both tables (RED: references not written yet; case 15 may already pass from Task 1 detection — record either way).
 
-- [ ] **Step 4: Research and write `python-core.md`**
+- [ ] **Step 4: Research and write `python.md`**
 
 Sources: docs.python.org (unittest, typing.Protocol, dataclasses), pytest docs. Content (fill every `_template.md` section):
 - Detection: `pyproject.toml` / `requirements*.txt` / `setup.py` without Django/FastAPI.
@@ -415,7 +415,7 @@ Sources: docs.python.org (unittest, typing.Protocol, dataclasses), pytest docs. 
 
 - [ ] **Step 5: Research and write `fastapi.md`**
 
-Sources: fastapi.tiangolo.com (Dependencies, Bigger Applications, Testing). First lines: research comment, then `Read python-core.md first.`. Content:
+Sources: fastapi.tiangolo.com (Dependencies, Bigger Applications, Testing). First lines: research comment, then `Read python.md first.`. Content:
 - Detection: `fastapi` in `pyproject.toml` / `requirements*.txt`.
 - Reuse units: service functions/classes, dependency providers, Pydantic schemas (boundary only).
 - Paths: `app/routers/` (adapters) → `app/services/` → `app/domain/`; shared helpers in `app/shared/`; `app/schemas/`.
@@ -426,14 +426,14 @@ Sources: fastapi.tiangolo.com (Dependencies, Bigger Applications, Testing). Firs
 
 - [ ] **Step 6: GREEN**
 
-Run: `wc -l skills/reusable-dev/references/stacks/python-core.md skills/reusable-dev/references/stacks/fastapi.md && claude plugin validate . --strict`
+Run: `wc -l skills/reusable-dev/references/stacks/python.md skills/reusable-dev/references/stacks/fastapi.md && claude plugin validate . --strict`
 Run: `evals/lib/run-eval.sh --runs 1 --case "14-rule-of-three-fastapi"` then `evals/lib/run-eval.sh --runs 1 --case "15-setup-detects-fastapi"`
 Expected: with-plugin 1.00 for both. On failure: rerun with `--keep-temp`, read the trace, tighten the reference wording (not graders unless provably wrong, with quoted evidence). Max 2 reruns per case.
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add skills/reusable-dev/references/stacks/python-core.md skills/reusable-dev/references/stacks/fastapi.md evals/fixtures/fastapi evals/14-rule-of-three-fastapi evals/15-setup-detects-fastapi
+git add skills/reusable-dev/references/stacks/python.md skills/reusable-dev/references/stacks/fastapi.md evals/fixtures/fastapi evals/14-rule-of-three-fastapi evals/15-setup-detects-fastapi
 git commit -m "feat: add python-core and fastapi stack references with evals"
 ```
 
@@ -447,7 +447,7 @@ git commit -m "feat: add python-core and fastapi stack references with evals"
 - Create: `evals/14-rule-of-three-django/{case.yaml,setup.sh}`, `evals/15-setup-detects-django/{case.yaml,setup.sh}`
 
 **Interfaces:**
-- Consumes: `python-core.md` (Task 2), detection row 7 (Task 1).
+- Consumes: `python.md` (Task 2), detection row 7 (Task 1).
 
 - [ ] **Step 1: Create the fixture**
 
@@ -674,7 +674,7 @@ and grader `config-has-unittest-command` becomes:
 
 - [ ] **Step 4: Research and write `django.md`**
 
-Sources: docs.djangoproject.com (applications, managers/QuerySet, custom template tags → inclusion tags, `include` tag, testing). First lines: research comment, then `Read python-core.md first.`. Content:
+Sources: docs.djangoproject.com (applications, managers/QuerySet, custom template tags → inclusion tags, `include` tag, testing). First lines: research comment, then `Read python.md first.`. Content:
 - Detection: `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt`.
 - Reuse units: reusable apps; per-app `services.py` / `selectors.py`; custom `Manager` / `QuerySet` methods; `{% include %}` partials and inclusion tags.
 - Paths: feature apps at root; shared logic in a `common/` or `core/` app (with `__init__.py`); shared templates in `common/templates/common/`; skip `migrations/`.
