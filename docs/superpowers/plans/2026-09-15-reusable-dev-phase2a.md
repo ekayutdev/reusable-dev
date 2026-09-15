@@ -18,7 +18,7 @@
 - References ≤ 150 lines, English, section order of `stacks/_template.md`, first line `<!-- researched 2026-09-15: <lib>@<version>, … -->` from official docs; framework files have `Read <core>.md first.` as the next line.
 - SKILL.md body ≤ 120 lines. Report prefixes `Reuse decision:` / `Verified:` / `Notes:`, ladder, tiers T1–T4, seven extension points unchanged.
 - New `stack` values exactly: `nestjs`, `fastapi`, `django`, `python`.
-- Eval grader rules learned in Phase 1: `tool_used` with `max: 0` also needs `min: 0`; `node --test` graders use `(#|ℹ) fail 0`; Python graders use `Ran \d+ tests?[\s\S]*?\bOK\b`; never put a fixture file/function name or grader string into shipped plugin files (`skills/`, `commands/`, `agents/`).
+- Eval grader rules learned in Phase 1: `tool_used` with `max: 0` also needs `min: 0`; `node --test` graders use `(#|ℹ) fail 0`; Python graders use `Ran \d+ tests?[\s\S]*?OK\b`; never put a fixture file/function name or grader string into shipped plugin files (`skills/`, `commands/`, `agents/`).
 - Every setup.sh starts with `#!/bin/bash` and `set -euo pipefail`, is executable, and calls `"$(dirname "$0")/../lib/use-fixture.sh" <fixture> [--no-config]`.
 - Commit after every task. Commit messages end with:
   ```
@@ -335,7 +335,7 @@ graders:
   - type: regex
     name: tests-green
     target: trace
-    pattern: "Ran \\d+ tests?[\\s\\S]*?\\bOK\\b"
+    pattern: "Ran \\d+ tests?[\\s\\S]*?OK\\b"
   - type: regex
     name: orders-assertion-kept
     target: { source: file, path: tests/test_orders.py }
@@ -434,7 +434,7 @@ Expected: with-plugin 1.00 for both. On failure: rerun with `--keep-temp`, read 
 
 ```bash
 git add skills/reusable-dev/references/stacks/python.md skills/reusable-dev/references/stacks/fastapi.md evals/fixtures/fastapi evals/14-rule-of-three-fastapi evals/15-setup-detects-fastapi
-git commit -m "feat: add python-core and fastapi stack references with evals"
+git commit -m "feat: add python and fastapi stack references with evals"
 ```
 
 ---
@@ -631,7 +631,7 @@ graders:
   - type: regex
     name: tests-green
     target: trace
-    pattern: "Ran \\d+ tests?[\\s\\S]*?\\bOK\\b"
+    pattern: "Ran \\d+ tests?[\\s\\S]*?OK\\b"
   - type: regex
     name: orders-assertion-kept
     target: { source: file, path: orders/tests.py }
