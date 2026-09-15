@@ -27,7 +27,7 @@ Reuse-first development for Claude Code. Stack-agnostic, works alone or alongsid
 
 ## รองรับ / Supported (phase 1)
 
-Stacks: React/Next.js · Vue/Nuxt · SvelteKit · Node/TypeScript
+Stacks: React/Next.js · Vue/Nuxt · SvelteKit · Node/TypeScript · NestJS · FastAPI · Django
 UI libraries: shadcn/ui (`shadcn-react`) · shadcn-vue (`shadcn-vue`) · shadcn-svelte (`shadcn-svelte`)
 Stack อื่นใช้หลักการทั่วไปได้ และ `/reusable-dev:reuse-setup` สร้างไฟล์ stack ใหม่จาก template ได้
 

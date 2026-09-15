@@ -19,7 +19,7 @@ Read `.claude/reusable-dev.md`. Missing → follow "Missing config" in `referenc
 ### 1. Discover
 1. Grep the registry file (config `registry`) for the thing you need plus 2–3 synonyms (button/btn/action · date/format/time · price/money/currency) (file missing → skip to 3; it is created in step 5).
 2. Confirm each hit's path exists. Missing → Notes: `registry stale — run /reusable-dev:reuse-registry --sync`.
-3. Grep `shared_paths` and the whole source tree (`src/`, `app/`, `lib/`, `components/`, `composables/`, `hooks/`, `utils/`, `stores/`, `server/`, `shared/`, `apps/*`, `packages/*` — whichever exist; skip `node_modules`, `dist`, `build`, `.next`, `.nuxt`, `.svelte-kit`) for the same terms and for similar function bodies or prop names. Duplicates inside feature folders count.
+3. Grep `shared_paths` and the source roots for the project's language (`references/config-format.md` → "Source roots by language") for the same terms and for similar function bodies or prop names. Duplicates inside feature folders count.
 4. `ui_lib` set → check its primitives directory, then its CLI registry (`references/ui-libs/<ui_lib>.md`).
 
 ### 2. Decide
