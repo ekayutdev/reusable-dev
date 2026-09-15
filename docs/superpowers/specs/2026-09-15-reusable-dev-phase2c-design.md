@@ -1,7 +1,7 @@
 # reusable-dev Phase 2c — .NET (ASP.NET Core API + Blazor) — Design Spec
 
 - **วันที่:** 2026-09-15
-- **สถานะ:** Approved design, รอรีวิว spec
+- **สถานะ:** Implemented (phase 2c)
 - **ต่อจาก:** `docs/superpowers/specs/2026-09-15-reusable-dev-phase2b-design.md` (implemented, merged)
 
 ## 1. เป้าหมาย
