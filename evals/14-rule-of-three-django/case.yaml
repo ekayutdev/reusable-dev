@@ -1,0 +1,49 @@
+schema_version: "1.0"
+name: 14-rule-of-three-django
+description: Django — a third money-formatting need extracts the duplicated helper to a shared app module and keeps tests green.
+tags: [phase2a, django]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: "Add a balance_label(customer) function in customers/services.py that returns text like \"Balance: $12.50\" from customer.balance_cents, with a unittest test in customers/tests.py."
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: "(^|\\n)(common|core)/[^\\n]*\\.py"
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: orders/services.py }
+    pattern: "def format_money"
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: invoices/services.py }
+    pattern: "def format_money"
+    match: not_contains
+  - type: regex
+    name: imports-shared
+    target: { source: file, path: customers/services.py }
+    pattern: "from (common|core)[\\w.]* import"
+  - type: regex
+    name: tests-green
+    target: trace
+    pattern: "Ran \\d+ tests? in [\\d.]+s(?:\\\\n|\\s)+OK\\b"
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: orders/tests.py }
+    pattern: "Order total: \\$25\\.00"
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: invoices/tests.py }
+    pattern: "Amount due: \\$3\\.50"
+  - type: regex
+    name: reports-create
+    pattern: "Reuse decision:\\s*Create"
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"
