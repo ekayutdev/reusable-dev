@@ -1,9 +1,9 @@
-<!-- researched 2026-09-15: nestjs@12 current docs, v11 pages where newer ones restructured (docs.nestjs.com/modules, /fundamentals/custom-providers, /fundamentals/testing, /cli/monorepo); node@26.7.0 --> 
+<!-- researched 2026-09-15: @nestjs/core@12.0.2 current docs, v11 pages where newer ones restructured (docs.nestjs.com/modules, /fundamentals/custom-providers, /fundamentals/testing, /cli/monorepo); node@26.7.0 -->
 Read node-ts.md first.
 
 # Stack: nestjs
 
-NestJS backend. All rules from node-ts.md apply; this file adds the module/provider structure.
+NestJS backend. node-ts.md applies except Reuse units, Paths, and F2 (dependency injection) below, which replace it.
 
 ## Detection
 `@nestjs/core` in `package.json` dependencies, or a `nest-cli.json` present (detection row 7).
@@ -34,6 +34,8 @@ export class ReportsService {
 ```
 - Injection tokens for interfaces/non-class dependencies (docs.nestjs.com/fundamentals/custom-providers):
 ```ts
+import { Inject, Injectable } from "@nestjs/common";
+
 export const REPORTS_CLOCK = Symbol("REPORTS_CLOCK");
 
 @Injectable()
@@ -43,10 +45,12 @@ export class ReportsService {
 // provider: { provide: REPORTS_CLOCK, useValue: () => new Date() }
 ```
 - Keep domain logic in plain exported functions without decorators (node-ts.md domain rules) so they are testable without bootstrapping Nest; controllers stay thin adapters and services orchestrate.
+- F6: Domain errors stay framework-free; map them to `HttpException` subclasses in an exception filter or the controller, never in services.
 
 ## Testing
 - Providers: `Test.createTestingModule({ controllers: [...], providers: [...] })` from `@nestjs/testing`, then `.overrideProvider(X).useValue(mock)` and `.compile()`; get instances via `moduleRef.get(X)` (docs.nestjs.com/fundamentals/testing).
 - Pure functions: the project's runner — `jest <path>`, `vitest run <path>`, or `node --test <path>` — no Nest involved. Use exactly what config `commands.test` says.
+- Decorators and constructor parameter properties are not erasable TypeScript — code under `node --test` must not import decorated files; test providers with Jest or Vitest (with SWC).
 
 ## Stack-specific anti-patterns
 - Business logic in controllers — controllers parse and delegate to a provider; logic there is a copy no queue/CLI consumer can reuse.

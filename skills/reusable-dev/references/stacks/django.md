@@ -45,7 +45,7 @@ def button(label, variant="primary"):
 ```
 - C4: content goes through a `{% block %}` in a base partial used with `{% extends %}` (or is passed pre-rendered); `{% include %}` has no slots.
 - C5: accept an `attrs`/`class` argument rendered on the root element; refs do not apply to server templates.
-- C6: a field's value comes from the bound form (`data`), its default from `initial`; override widget templates instead of copying forms.
+- C6: a field's value comes from the bound form (`data`), its default from `initial`; customize a widget by subclassing it with its own `template_name` (or enable `FORM_RENDERER = "django.forms.renderers.TemplatesSetting"` to override built-in widget templates) instead of copying forms.
 - No copy-and-tweak templates (`button_danger.html` beside `button.html`); C7: no hardcoded colors in the partial — variants map to CSS classes.
 
 ## Logic idioms
@@ -53,6 +53,9 @@ def button(label, variant="primary"):
 - F6: services raise domain exceptions (per python.md); views map them to `Http404` or form errors — services never raise `Http404`.
 - Reusable queries are `QuerySet` methods, composable by name (docs.djangoproject.com/en/stable/topics/db/managers):
 ```python
+from django.db import models
+
+
 class TenantQuerySet(models.QuerySet):
     def active(self) -> "TenantQuerySet":
         return self.filter(deleted_at__isnull=True)
@@ -65,7 +68,7 @@ class Tenant(models.Model):
 - F2: pass collaborators (mailer, clock, store) into service functions as arguments, per python.md — never module-level singletons inside logic.
 
 ## Testing
-- `python manage.py test reports.tests.test_summary` — one app, module, class, or method (docs.djangoproject.com/en/stable/topics/testing/overview).
+- `python3 manage.py test reports.tests.test_summary` — one app, module, class, or method (docs.djangoproject.com/en/stable/topics/testing/overview).
 - Plain-Python services in `services.py` test with `unittest` alone, no Django settings — per python.md.
 - Use exactly what config `commands.test` specifies.
 

@@ -33,33 +33,33 @@ skills:                      # optional extension points; [] = built-in fallback
 
 Use the first row that matches, top to bottom.
 
-Python web frameworks (rows 4–5) come before JS rows 6–8 because Django and FastAPI projects often keep a package.json only for asset tooling.
+Python web frameworks (rows 4–5) come before bare UI-library deps (row 6) and generic package.json rows (7–8) because Python projects often keep a package.json only for asset tooling (Vite, Tailwind); a Python manifest next to a tooling-only package.json never makes the project node-ts.
 
 | # | Signal | Value |
 |---|---|---|
 | 1 | `next.config.*` or `"next"` in package.json deps | `stack: react-next` |
-| 2 | `nuxt.config.*` or `"nuxt"` / `"vue"` in deps | `stack: vue-nuxt` |
-| 3 | `svelte.config.*` or `"@sveltejs/kit"` in deps | `stack: sveltekit` |
+| 2 | `nuxt.config.*` or `"nuxt"` in deps | `stack: vue-nuxt` |
+| 3 | `"@sveltejs/kit"` in deps (with or without `svelte.config.*`) | `stack: sveltekit` |
 | 4 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `stack: django` |
 | 5 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `stack: fastapi` |
-| 6 | `"react"` in deps without next | `stack: react-next` |
+| 6 | `"react"` in deps without next → `stack: react-next`; `"vue"` in deps without nuxt → `stack: vue-nuxt` | see signal |
 | 7 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
-| 8 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework (tsconfig.json optional) | `stack: node-ts` |
+| 8 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` at the same level (tsconfig.json optional) | `stack: node-ts` |
 | 9 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `stack: python` |
 | – | `components.json` + react / vue / svelte | `ui_lib: shadcn-react` / `shadcn-vue` / `shadcn-svelte` |
 | – | package.json `scripts` named `typecheck`/`type-check`, `lint`, `test`, `build`, `e2e`/`test:e2e` | `commands.*` = `<pm> run <script>` using the lockfile's package manager |
-| – | Python: `pytest` in deps → `commands.test: pytest`; else `manage.py` → `python manage.py test`; else `python3 -m unittest` | `commands.test` |
+| – | Python: `pytest` in deps → `commands.test: pytest`; else `manage.py` → `python3 manage.py test`; else `python3 -m unittest` | `commands.test` |
 | – | Multiple `apps/*` or `packages/*` with different signals | path map for `stack` |
 
 `stack: python` loads `stacks/python.md`.
 
-A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (written by `/reusable-dev:reuse-setup`); the skill reads that location too. Shared paths: prefer existing dirs in this order — `src/shared/ui`, `src/components/shared`, `src/components/common`, `packages/ui/src` for components; `src/shared/lib`, `src/lib`, `packages/shared/src` for functions. Ignore the ui-lib primitives dir (`components/ui`) — it is covered by `ui_lib`.
+A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (written by `/reusable-dev:reuse-setup`); the skill reads that location too. Shared paths: prefer existing dirs in this order — `src/shared/ui`, `src/components/shared`, `src/components/common`, `packages/ui/src` for components; `src/shared/lib`, `src/lib`, `packages/shared/src` for functions. Ignore the ui-lib primitives dir (`components/ui`) — it is covered by `ui_lib`. NestJS functions shared paths (first that exists): `src/common`, `libs/shared/src`.
 
 ## Source roots by language
 
 | Language | Discover roots (whichever exist) | Skip |
 |---|---|---|
-| JS/TS | `src/`, `app/`, `lib/`, `components/`, `composables/`, `hooks/`, `utils/`, `stores/`, `server/`, `shared/`, `apps/*`, `packages/*` | `node_modules`, `dist`, `build`, `.next`, `.nuxt`, `.svelte-kit` |
+| JS/TS | `src/`, `app/`, `lib/`, `components/`, `composables/`, `hooks/`, `utils/`, `stores/`, `server/`, `shared/`, `apps/*`, `packages/*`, `libs/*` | `node_modules`, `dist`, `build`, `.next`, `.nuxt`, `.svelte-kit` |
 | Python | `src/`, `app/`, every root package with `__init__.py` or `apps.py` | `.venv`, `venv`, `__pycache__`, `migrations/`, `.pytest_cache`, `.mypy_cache` |
 
 Python shared paths (first that exists, as `shared_paths.functions`): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`; `shared_paths.components` is `common/templates` for Django, otherwise `""`.

@@ -50,6 +50,6 @@ def summary(
 
 ## Stack-specific anti-patterns
 - Business logic inside path operations — move it to a service the router calls.
-- Module-level DB engine/session creation (side effects at import time) — provide the session via `Depends()`.
+- A module-level shared DB Session — create the engine once (module level or lifespan) and yield a Session per request via `Depends()`.
 - Pydantic schemas reused as domain models in every layer — domain code takes plain data; convert at the boundary.
 - Fat `routers/` module doing parse + logic + persistence; split adapters from services.

@@ -40,19 +40,19 @@ skills/reusable-dev/references/stacks/
 ### 3.1 Detection ใน `references/config-format.md`
 ตารางมีกฎ **ใช้แถวแรกที่ตรง (บนลงล่าง)**:
 
-Python web frameworks (rows 4–5) come before JS rows 6–8 because Django and FastAPI projects often keep a package.json only for asset tooling.
+Python web frameworks (rows 4–5) come before bare UI-library deps (row 6) and generic package.json rows (7–8) because Python projects often keep a package.json only for asset tooling (Vite, Tailwind); a Python manifest next to a tooling-only package.json never makes the project node-ts.
 
 | ลำดับ | Signal | Value |
 |---|---|---|
-| 1 | `next.config.*` / `"next"` | `react-next` |
-| 2 | `nuxt.config.*` / `"nuxt"` / `"vue"` | `vue-nuxt` |
-| 3 | `svelte.config.*` / `"@sveltejs/kit"` | `sveltekit` |
-| 4 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `django` |
-| 5 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `fastapi` |
-| 6 | `"react"` without next | `react-next` |
-| 7 | `"@nestjs/core"` in deps or `nest-cli.json` | `nestjs` |
-| 8 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework | `node-ts` |
-| 9 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `python` |
+| 1 | `next.config.*` or `"next"` in package.json deps | `stack: react-next` |
+| 2 | `nuxt.config.*` or `"nuxt"` in deps | `stack: vue-nuxt` |
+| 3 | `"@sveltejs/kit"` in deps (with or without `svelte.config.*`) | `stack: sveltekit` |
+| 4 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `stack: django` |
+| 5 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `stack: fastapi` |
+| 6 | `"react"` in deps without next → `stack: react-next`; `"vue"` in deps without nuxt → `stack: vue-nuxt` | see signal |
+| 7 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
+| 8 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` at the same level (tsconfig.json optional) | `stack: node-ts` |
+| 9 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `stack: python` |
 
 แถว ui_lib, commands, monorepo path map คงเดิม
 
@@ -63,10 +63,10 @@ Python web frameworks (rows 4–5) come before JS rows 6–8 because Django and 
 ### 3.2 หัวข้อใหม่ "Source roots by language" ใน `config-format.md`
 | ภาษา | Roots ที่ Discover ค้น | ข้าม |
 |---|---|---|
-| JS/TS | `src/`, `app/`, `lib/`, `components/`, `composables/`, `hooks/`, `utils/`, `stores/`, `server/`, `shared/`, `apps/*`, `packages/*` | `node_modules`, `dist`, `build`, `.next`, `.nuxt`, `.svelte-kit` |
+| JS/TS | `src/`, `app/`, `lib/`, `components/`, `composables/`, `hooks/`, `utils/`, `stores/`, `server/`, `shared/`, `apps/*`, `packages/*`, `libs/*` | `node_modules`, `dist`, `build`, `.next`, `.nuxt`, `.svelte-kit` |
 | Python | `src/`, `app/`, ทุก package ที่ root ที่มี `__init__.py` หรือ `apps.py` | `.venv`, `venv`, `__pycache__`, `migrations/`, `.pytest_cache`, `.mypy_cache` |
 
-Shared paths เริ่มต้นฝั่ง Python (ใช้ตัวแรกที่มีอยู่): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`
+Shared paths เริ่มต้นฝั่ง Python (ใช้ตัวแรกที่มีอยู่, as `shared_paths.functions`): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`; `shared_paths.components` is `common/templates` for Django, otherwise `""`. NestJS functions shared paths (first that exists): `src/common`, `libs/shared/src`.
 
 ### 3.3 `SKILL.md` ขั้น Discover ข้อ 3
 แทนรายการโฟลเดอร์ด้วย: `Grep \`shared_paths\` and the source roots for the project's language (\`references/config-format.md\` → "Source roots by language") for the same terms and for similar function bodies or prop names. Duplicates inside feature folders count.`
@@ -120,13 +120,14 @@ Test ของ Python fixture ห้าม import `fastapi`/`django`
 ## 6. Evals
 
 ### 6.1 `14-rule-of-three-{nestjs,fastapi,django}`
-- Prompt: "Show each customer's outstanding balance formatted like the orders and invoices pages." (ปรับคำตาม domain ของ fixture)
+- Prompt (unhinted, generic form quoted from the case.yaml files): "Add a balance function in the customers module that returns \"Balance: $12.50\" from the customer's balance, with a test in <path>" — django: `balance_label(customer)` in `customers/services.py`, test in `customers/tests.py`; nestjs: `balanceLabel(customer)` in `src/customers/customer-balance.ts`, node:test in `src/customers/customer-balance.test.ts`; fastapi: `balance_label(customer)` in `app/services/customers.py`, unittest in `tests/test_customers.py`.
 - Graders:
-  - shared file created (`files` regex): nestjs `src/common/`; fastapi `app/(shared|domain)/`; django `(common|core)/`
+  - shared file created (`files` regex): nestjs `src/(common|shared)/`; fastapi `app/(shared|domain)/`; django `(common|core)/`
   - both original files no longer define the helper (`not_contains`)
   - customers file imports from the shared location
-  - tests green in trace: nestjs `(#|ℹ) fail 0`; python `Ran \d+ tests?[\s\S]*\bOK\b`
-  - `Reuse decision:\s*Create` in last message
+  - tests green in trace: python `Ran (?:[3-9]|\d{2,}) tests? in [\d.]+s(?:\\n|\s)+OK\b`; nestjs `(#|ℹ) fail 0` + `(#|ℹ) pass (?:[3-9]|\d{2,})`
+  - assertion-kept graders: original orders/invoices tests still assert `Order total: $25.00` / `Amount due: $3.50`
+  - `Reuse decision:\s*Create` (`reports-create`)
   - `skill-fired` (display only)
 
 ### 6.2 `15-setup-detects-{nestjs,fastapi,django}`
