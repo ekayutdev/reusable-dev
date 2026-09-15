@@ -1,0 +1,48 @@
+schema_version: "1.0"
+name: 14-rule-of-three-swiftui
+description: SwiftUI — a third money-formatting need extracts the duplicated helper to a shared SwiftPM target and keeps swift tests green.
+tags: [phase2b, swiftui]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: 'Add a public balanceLabel(_ customer: Customer) -> String function in Sources/Customers/CustomerLabel.swift that returns text like "Balance: $12.50" from customer.balanceCents, with a Swift Testing test in Tests/CustomersTests/CustomerLabelTests.swift.'
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: '(^|\n)Sources/Shared/[^\n]*\.swift'
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: Sources/Orders/OrderLabel.swift }
+    pattern: 'func formatMoney'
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: Sources/Invoices/InvoiceLabel.swift }
+    pattern: 'func formatMoney'
+    match: not_contains
+  - type: regex
+    name: imports-shared
+    target: { source: file, path: Sources/Customers/CustomerLabel.swift }
+    pattern: 'import Shared\b'
+  - type: regex
+    name: reports-t2-skipped
+    pattern: 'Verified:[^\n]*T2 skipped'
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: Tests/OrdersTests/OrderLabelTests.swift }
+    pattern: 'Order total: \$25\.00'
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: Tests/InvoicesTests/InvoiceLabelTests.swift }
+    pattern: 'Amount due: \$3\.50'
+  - type: regex
+    name: reports-create
+    pattern: 'Reuse decision:\s*Create'
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"
