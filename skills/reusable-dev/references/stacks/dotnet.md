@@ -4,7 +4,7 @@
 ASP.NET Core minimal APIs plus Blazor components on .NET 8+. No language core file — the general rules plus this reference apply.
 
 ## Detection
-`*.sln` at the root, or `*.csproj` at the root or in `src/*/` (detection row 9). A `package.json` with only asset tooling (Vite, Tailwind) does not change the stack. `*.fsproj` only → ecosystem `fsharp` (general rules).
+`*.sln` / `*.slnx` at the root, or `*.csproj` at the root, in `*/` or in `src/*/`, with at least one `*.csproj` (detection row 9; `.slnx` is the `dotnet new sln` default from the .NET 10 SDK). A `package.json` with only asset tooling (Vite, Tailwind) does not change the stack. `*.fsproj` only → ecosystem `fsharp` (general rules). A React/Vue client beside the API (e.g. `*.client/package.json` or `src/Api/*.csproj` next to a root React app) → use a stack path map, e.g. `{ "src/Api": dotnet, "client": react-next }`.
 
 ## Reuse units
 - Class library per domain: `src/<Domain>` with the domain's records and services — the unit of reusable business logic.
@@ -61,5 +61,5 @@ builder.Services.Configure<ReportOptions>(builder.Configuration.GetSection("Repo
 ## Stack-specific anti-patterns
 - Business logic in endpoints/controllers or `@code` blocks — move to a service or pure function; handlers delegate.
 - Injecting `IServiceProvider` to resolve services (service locator) — depend on the contract instead.
-- `.Result` / `.Wait()` and `async void` outside event handlers — deadlocks and crashes; await all the way.
+- `.Result` / `.Wait()` and `async void` outside event handlers — thread-pool starvation in ASP.NET Core, deadlocks in Blazor, crashes from async void; await all the way.
 - Copy-pasted components instead of parameters / `RenderFragment` — one component with variants.

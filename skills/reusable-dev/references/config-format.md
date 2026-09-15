@@ -45,10 +45,10 @@ Backend and native frameworks (rows 4–9) come before bare UI-library deps (row
 | 6 | `artisan`, or `laravel/framework` in `composer.json` | `stack: laravel` |
 | 7 | `axum` in any `Cargo.toml` in the repo (root, member, or excluded crate) | `stack: rust-axum` |
 | 8 | `Package.swift` or `*.xcodeproj` present and `import SwiftUI` in a source file | `stack: swiftui` |
-| 9 | `*.sln` at the root, or `*.csproj` at the root or in `src/*/` | `stack: dotnet` |
+| 9 | `*.sln` / `*.slnx` at the root, or `*.csproj` at the root, in `*/` or in `src/*/` — and at least one `*.csproj` in the repo | `stack: dotnet` |
 | 10 | `"react"` in deps without next → `stack: react-next`; `"vue"` in deps without nuxt → `stack: vue-nuxt` | see signal |
 | 11 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
-| 12 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` / `composer.json` / `Cargo.toml` / `Package.swift` / `*.sln` / `*.csproj` at the same level (tsconfig.json optional) | `stack: node-ts` |
+| 12 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` / `composer.json` / `Cargo.toml` / `Package.swift` / `*.sln` / `*.slnx` / `*.csproj` at the same level (tsconfig.json optional) | `stack: node-ts` |
 | 13 | other `pyproject.toml` / `requirements*.txt` / `setup.py` | `stack: python` |
 | – | `components.json` + react / vue / svelte | `ui_lib: shadcn-react` / `shadcn-vue` / `shadcn-svelte` |
 | – | package.json `scripts` named `typecheck`/`type-check`, `lint`, `test`, `build`, `e2e`/`test:e2e` | `commands.*` = `<pm> run <script>` using the lockfile's package manager |
@@ -72,7 +72,7 @@ A project stack file may live at `.claude/reusable-dev/stacks/<stack>.md` (writt
 | PHP | `app/`, `src/`, `resources/views/components/`, `packages/*` | `vendor/`, `storage/`, `bootstrap/cache/`, `node_modules` |
 | Rust | `src/`, `crates/*` | `target/` |
 | Swift | `Sources/*`, `Packages/*`, the app target folder | `.build/`, `DerivedData/` |
-| C# | `src/*`, `tests/*`, project folders next to the `*.sln` | `bin/`, `obj/`, `node_modules` |
+| C# | `src/*`, `tests/*`, project folders next to the `*.sln` / `*.slnx` | `bin/`, `obj/`, `node_modules` |
 
 Python shared paths (first that exists, as `shared_paths.functions`): `common/`, `core/`, `shared/`, `app/shared/`, `src/<pkg>/shared/`; `shared_paths.components` is `common/templates` for Django, otherwise `""`.
 

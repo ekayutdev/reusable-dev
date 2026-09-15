@@ -38,7 +38,7 @@ graders:
   - type: regex
     name: shared-wired
     target: trace
-    pattern: 'ProjectReference Include=\\?"[^"]*Shared[^"]*\.csproj|file_path\\?":\s*\\?"[^"]*src/Billing/(Shared|Common)/'
+    pattern: 'ProjectReference Include=\\?"[^"]*Shared[^"]*\.csproj|file_path\\?":\s*\\?"[^"]*src/Billing/(Shared|Common)/|dotnet add [^\n"]*reference [^\n"]*Shared[^\n"]*\.csproj'
   - type: regex
     name: orders-assertion-kept
     target: { source: file, path: tests/Billing.Tests/OrderServiceTests.cs }
