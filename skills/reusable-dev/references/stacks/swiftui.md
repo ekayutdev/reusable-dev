@@ -29,6 +29,9 @@ struct BrandButtonStyle: ButtonStyle {
             .foregroundStyle(variant == .destructive ? Color.red : Color.blue)
     }
 }
+extension ButtonStyle where Self == BrandButtonStyle {
+    static func brand(_ variant: BrandButtonStyle.Variant) -> Self { .init(variant: variant) }
+}
 // .buttonStyle(.brand(.destructive))
 ```
 - C4 content: `@ViewBuilder` closure parameters, never a label string:
@@ -57,7 +60,7 @@ extension EnvironmentValues {
 ```
 - F6: `throws` with typed domain errors — `throws(ShipmentError)` in Swift 6 (docs.swift.org, Error Handling; SE-0413); views map errors to UI state:
 ```swift
-struct ShipmentError: Error { case lateDelivery }
+enum ShipmentError: Error { case lateDelivery }
 func loadShipment() throws(ShipmentError) -> Shipment { /* ... */ }
 // view: do { model.shipment = try loadShipment() } catch { model.status = .failed }
 ```
@@ -72,6 +75,6 @@ func loadShipment() throws(ShipmentError) -> Shipment { /* ... */ }
 ## Stack-specific anti-patterns
 - Logic in `body` — move to a model or pure function; body renders.
 - Copy-pasted modifier chains — extract a `ViewModifier` + `View` extension.
-- Creating an `@Observable` model inside a view's init — use `@State` for view-owned models or inject from a parent.
+- Creating an `@ObservedObject` or `@Observable` model inside a view — the view does not own it and it is recreated on redraw; own it with `@StateObject` / `@State`, or inject it from a parent.
 - Massive views — split into small `View` structs and `@ViewBuilder` sections.
 - A shared target importing feature targets — dependencies point feature → shared, never back.
