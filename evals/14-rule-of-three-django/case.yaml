@@ -30,7 +30,7 @@ graders:
   - type: regex
     name: tests-green
     target: trace
-    pattern: "Ran \\d+ tests? in [\\d.]+s(?:\\\\n|\\s)+OK\\b"
+    pattern: "Ran (?:[3-9]|\\d{2,}) tests? in [\\d.]+s(?:\\\\n|\\s)+OK\\b"
   - type: regex
     name: orders-assertion-kept
     target: { source: file, path: orders/tests.py }
