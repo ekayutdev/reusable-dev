@@ -1,0 +1,7 @@
+@inject OrderService Orders
+
+<p class="order-summary">@Orders.OrderTotalLabel(Lines)</p>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<(long Cents, int Quantity)> Lines { get; set; } = [];
+}

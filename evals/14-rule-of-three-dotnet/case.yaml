@@ -1,0 +1,57 @@
+schema_version: "1.0"
+name: 14-rule-of-three-dotnet
+description: .NET — a third money-formatting need extracts the duplicated private helper to shared code and reports T2 skipped (dotnet is unavailable in the eval sandbox).
+tags: [phase2c, dotnet]
+context:
+  scaffold_script: setup.sh
+execution:
+  prompt: 'Add a BalanceLabel(Customer customer) method to a new CustomerService class in src/Billing/CustomerService.cs that returns text like "Balance: $12.50" from customer.BalanceCents, with an xunit test in tests/Billing.Tests/CustomerServiceTests.cs.'
+  max_turns: 40
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+graders:
+  - type: regex
+    name: shared-module-created
+    target: files
+    pattern: '(^|\n)src/(Shared|Billing\.Shared|Billing/Shared|Billing/Common)/[^\n]*\.cs'
+  - type: regex
+    name: orders-no-local-copy
+    target: { source: file, path: src/Billing/OrderService.cs }
+    pattern: 'string FormatMoney\('
+    match: not_contains
+  - type: regex
+    name: invoices-no-local-copy
+    target: { source: file, path: src/Billing/InvoiceService.cs }
+    pattern: 'string FormatMoney\('
+    match: not_contains
+  - type: regex
+    name: customers-no-local-copy
+    target: { source: file, path: src/Billing/CustomerService.cs }
+    pattern: 'string FormatMoney\('
+    match: not_contains
+  - type: regex
+    name: customers-uses-shared
+    target: { source: file, path: src/Billing/CustomerService.cs }
+    pattern: '\w+\.(Format|ToMoney)\w*\(|using Billing\.(Shared|Common)\b'
+  - type: regex
+    name: reports-t2-skipped
+    pattern: 'Verified:[^\n]*T2 skipped'
+  - type: regex
+    name: shared-wired
+    target: trace
+    pattern: 'ProjectReference Include=\\"[^"\\]*Shared[^"\\]*\.csproj|src/Billing/(Shared|Common)/'
+  - type: regex
+    name: orders-assertion-kept
+    target: { source: file, path: tests/Billing.Tests/OrderServiceTests.cs }
+    pattern: 'Order total: \$25\.00'
+  - type: regex
+    name: invoices-assertion-kept
+    target: { source: file, path: tests/Billing.Tests/InvoiceServiceTests.cs }
+    pattern: 'Amount due: \$3\.50'
+  - type: regex
+    name: reports-create
+    pattern: 'Reuse decision:\s*Create'
+    flags: i
+  - type: tool_used
+    name: skill-fired
+    tool: Skill
+    input_match: "reusable-dev"
