@@ -4,7 +4,7 @@
 SvelteKit 2 + Svelte 5 runes.
 
 ## Detection
-`svelte.config.*`, or `"@sveltejs/kit"` in package.json deps.
+`"@sveltejs/kit"` in package.json deps, with or without `svelte.config.*` (detection row 3). A Svelte project without SvelteKit is not this stack.
 
 ## Reuse units
 - UI component: `src/lib/components/Button.svelte` (PascalCase).

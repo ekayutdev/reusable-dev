@@ -55,7 +55,7 @@ Backend and native frameworks (rows 4–9) come before bare UI-library deps (row
 | – | Python: `pytest` in deps → `commands.test: pytest`; else `manage.py` → `python3 manage.py test`; else `python3 -m unittest` | `commands.test` |
 | – | Laravel: `vendor/bin/pest` exists → `commands.test: vendor/bin/pest`; else `php artisan test` — also when `vendor/` is not installed yet; record the framework command, not a workaround script | `commands.test` |
 | – | Rust: `cargo test` | `commands.test` |
-| – | Swift: `Package.swift` → `swift test`; only `*.xcodeproj` → `xcodebuild test -scheme <scheme>` with a scheme from `xcodebuild -list`; scheme unknown → ask, non-interactive → `""` | `commands.test` |
+| – | Swift: `Package.swift` → `swift test`; only `*.xcodeproj` → `xcodebuild test -scheme <scheme> -destination <dest>` with a scheme from `xcodebuild -list` (iOS needs `-destination`, e.g. `'platform=iOS Simulator,name=iPhone 16'`; a `*.xcworkspace` needs `-workspace` instead); scheme unknown → ask, non-interactive → `""` | `commands.test` |
 | – | .NET: `commands.test: dotnet test`; `commands.build: dotnet build` | `commands.test`, `commands.build` |
 | – | Multiple `apps/*` or `packages/*` with different signals | path map for `stack` |
 

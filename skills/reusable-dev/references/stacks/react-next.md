@@ -4,7 +4,7 @@
 Next.js App Router + React 19.
 
 ## Detection
-`next.config.*`, or `"next"` (or `"react"` without next) in package.json deps.
+`next.config.*`, or `"next"` in package.json deps (detection row 1). A bare `"react"` dependency without Next also maps here (detection row 10) — the Next-only idioms below (App Router, Server Components) then do not apply.
 
 ## Reuse units
 - UI component: one file per component, `src/shared/ui/Button.tsx` (PascalCase).

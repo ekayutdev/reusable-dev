@@ -68,7 +68,7 @@ func loadShipment() throws(ShipmentError) -> Shipment { /* ... */ }
 
 ## Testing
 - Swift Testing: `@Test`, `#expect`, `@Suite` (developer.apple.com/documentation/testing, Defining test functions).
-- One suite or test: `swift test --filter <Suite or test>` (docs.swift.org/package-manager). Xcode projects: `xcodebuild test -scheme <scheme>`.
+- One suite or test: `swift test --filter <Suite or test>` (docs.swift.org/package-manager). Xcode projects: `xcodebuild test -scheme <scheme> -destination <dest>` (iOS simulators need `-destination`).
 - Test view logic through models and pure functions, not view bodies.
 - Use exactly what config `commands.test` specifies; if it is empty, run no test command and report `T2 skipped (no command)` (commands above are examples for filling the config).
 

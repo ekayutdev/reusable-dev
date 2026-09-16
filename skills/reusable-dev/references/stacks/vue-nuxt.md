@@ -4,7 +4,7 @@
 Nuxt 4 + Vue 3 `<script setup>`.
 
 ## Detection
-`nuxt.config.*`, or `"nuxt"` / `"vue"` in package.json deps.
+`nuxt.config.*`, or `"nuxt"` in package.json deps (detection row 2). A bare `"vue"` dependency without Nuxt also maps here (detection row 10) — the Nuxt-only idioms below then do not apply.
 
 ## Reuse units
 - UI component: `app/components/BaseButton.vue` (auto-imported by Nuxt; `Base`/`App` prefix or `components/shared` subfolder for shared primitives). Never put your own primitives in `components/ui` — that dir belongs to the shadcn-vue ui_lib and config-format.md says to ignore it.
