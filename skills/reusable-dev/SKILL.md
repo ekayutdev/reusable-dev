@@ -49,6 +49,10 @@ Created a shared unit or changed a shared API → update its registry row (`refe
 
 Writing a design or implementation plan (with any planning skill or none): do Discover + Decide for each task and put a `Reuse decision:` line in every task that creates or changes code. Implementers who never load this skill still see it.
 
+## When delegating the code work
+
+Dispatching subagents, another CLI, or any worker to write the code does not transfer the report. Collect each task's `Reuse decision:` from the plan or the briefs you handed out, run the verification ladder yourself after the last task lands (a worker's test run is a claim, not a result), and end with the block below. "I only coordinated" is not an exemption.
+
 ## Report — always end with
 
 ```
@@ -69,4 +73,5 @@ Changing an existing unit without an API change: `Reuse decision: Reuse <unit> (
 | "Put it in shared, it might be reused" | One use = feature folder. |
 | "There are two copies already, a third is fine" | Third use = extract to shared now. |
 | "Tests probably pass" | Run them, or write `skipped (no command)`. |
+| "Subagents wrote the code, so the report is not mine" | You dispatched them. Aggregate their `Reuse decision:` lines, run T1-T3, report. |
 | "Loosen the call-site test so it passes" | Keep the API backward compatible or update the caller. |
