@@ -31,7 +31,7 @@
 
 ```
 github.com/ekayutdev/reusable-dev          (public)
-  .claude-plugin/plugin.json               แก้: เพิ่ม homepage
+  .claude-plugin/plugin.json               แก้: เพิ่ม homepage + repository
   .claude-plugin/marketplace.json          ใหม่: marketplace ในตัว
   skills/ commands/ agents/ evals/ docs/ README.md LICENSE
 
@@ -54,19 +54,14 @@ github.com/ekayutdev/ekayutdev-plugins     (private, backup + ใช้เอง
   "name": "reusable-dev",
   "owner": { "name": "ekayut" },
   "metadata": {
-    "description": "Reuse-first development for full-stack apps.",
-    "version": "0.1.0"
+    "description": "Reuse-first development for full-stack apps, by ekayut."
   },
   "plugins": [
     {
       "name": "reusable-dev",
       "source": "./",
       "description": "Reuse-first development for full-stack apps: find existing components and functions before writing new ones, design them for reuse, keep a registry, and verify changes including call sites. 11 stacks; stack-agnostic with optional extension points for other skills.",
-      "version": "0.1.0",
-      "author": { "name": "ekayut" },
-      "license": "MIT",
-      "category": "development",
-      "keywords": ["reuse", "components", "design-system", "shadcn", "refactor", "testing"]
+      "category": "development"
     }
   ]
 }
@@ -74,9 +69,11 @@ github.com/ekayutdev/ekayutdev-plugins     (private, backup + ใช้เอง
 
 ชื่อ marketplace = `reusable-dev` ไม่ชนกับ `ekayutdev-plugins` ที่ลงทะเบียนไว้แล้วในเครื่อง
 
+entry ไม่ซ้ำ `version` / `author` / `license` / `keywords` จาก `plugin.json` โดยตั้งใจ — `plugin.json` เป็นแหล่งความจริงเดียว ไม่ต้องไล่ bump สองที่ (`scroll-world` ก็ทำแบบนี้) manifest ก้อนนี้ทดสอบ `claude plugin validate … --strict` ในไดเรกทอรีชั่วคราวแล้ว ผ่าน
+
 ### 3.2 `.claude-plugin/plugin.json` (แก้)
 
-เพิ่มคีย์เดียว: `"homepage": "https://github.com/ekayutdev/reusable-dev"` (name, version, description, author, license, keywords มีครบแล้ว)
+เพิ่มสองคีย์: `"homepage"` และ `"repository"` ชี้ `https://github.com/ekayutdev/reusable-dev` (name, version, description, author, license, keywords มีครบแล้ว) — ทดสอบ `--strict` แล้วผ่าน
 
 ### 3.3 `README.md` หัวข้อ "ติดตั้ง / Install" (บรรทัด 42–66, เขียนใหม่)
 
@@ -90,11 +87,11 @@ github.com/ekayutdev/ekayutdev-plugins     (private, backup + ใช้เอง
 
 | # | ทำ | เสร็จเมื่อ |
 |---|---|---|
-| 1 | เพิ่ม `marketplace.json`, แก้ `plugin.json`, เขียน README หัวข้อติดตั้งใหม่ | `claude plugin validate . --strict` ผ่าน |
+| 1 | เพิ่ม `marketplace.json`, แก้ `plugin.json`, เขียน README หัวข้อติดตั้งใหม่ | validate ทั้ง `plugin.json` และ `marketplace.json` แบบ `--strict` ผ่านทั้งคู่ (ดูข้อ 5) |
 | 2 | commit การเปลี่ยนแปลงข้อ 1 | working tree สะอาด |
 | 3 | `gh repo create ekayutdev/reusable-dev --public --source=. --remote=origin --push` | `git ls-remote origin` เห็น `main` ที่ commit เดียวกับ HEAD |
 | 4 | tag `v0.1.0` ที่ HEAD แล้ว `git push origin v0.1.0` | `git ls-remote --tags origin` เห็น `v0.1.0` |
-| 5 | clone ใหม่จาก GitHub ไป scratch dir แล้ว `claude plugin validate <clone> --strict` | ผ่าน (ดูข้อ 5) |
+| 5 | clone ใหม่จาก GitHub ไป scratch dir แล้ว validate ทั้งสอง manifest ในโคลนนั้น | ผ่านทั้งคู่ (ดูข้อ 5) |
 | 6 | `ekayutdev-plugins`: เพิ่ม `__pycache__/` ใน `.gitignore`; แสดง diff ของงาน hermes ที่ค้างให้เจ้าของตัดสินใจว่าจะ commit หรือไม่ | เจ้าของตัดสินใจแล้ว |
 | 7 | `gh repo create ekayutdev/ekayutdev-plugins --private --source=. --remote=origin --push` | `git ls-remote origin` เห็น `main` |
 | 8 | README ของ `ekayutdev-plugins` หนึ่งบรรทัด: ถ้าตั้งเครื่องใหม่ ให้ clone `reusable-dev` แล้วสร้าง symlink `plugins/reusable-dev` ใหม่ | บรรทัดนั้นอยู่ใน repo |
@@ -103,8 +100,12 @@ github.com/ekayutdev/ekayutdev-plugins     (private, backup + ใช้เอง
 
 ## 5. การตรวจสอบ
 
-1. ก่อน push: `claude plugin validate . --strict`
-2. หลัง push: `git clone https://github.com/ekayutdev/reusable-dev <scratch>` แล้ว `claude plugin validate <scratch> --strict` — ข้อนี้ตรวจ *สิ่งที่คนอื่นได้จริง* ไม่ใช่ working tree ที่มี `.remember/`, `.superpowers/` ปนอยู่ จับกรณี "ลืม commit ไฟล์" และ "พึ่งไฟล์ที่ gitignore"
+**ข้อควรระวังที่ตรวจพบ 2026-09-18:** ถ้าไดเรกทอรีมีทั้ง `marketplace.json` และ `plugin.json` คำสั่ง `claude plugin validate <dir>` จะตรวจ **marketplace manifest เท่านั้น** (ยืนยันกับ `~/.claude/plugins/marketplaces/scroll-world` ซึ่งมีทั้งสองไฟล์ — output ขึ้นว่า `Validating marketplace manifest`) ดังนั้นหลังเพิ่ม `marketplace.json` ต้องระบุพาธไฟล์ทั้งสองอย่างชัดเจน ไม่งั้นการตรวจ plugin จะหายไปเงียบ ๆ
+
+1. ก่อน push ทั้งสองคำสั่ง:
+   - `claude plugin validate .claude-plugin/plugin.json --strict`
+   - `claude plugin validate .claude-plugin/marketplace.json --strict`
+2. หลัง push: `git clone https://github.com/ekayutdev/reusable-dev <scratch>` แล้วรันสองคำสั่งเดิมในโคลนนั้น — ข้อนี้ตรวจ *สิ่งที่คนอื่นได้จริง* ไม่ใช่ working tree ที่มี `.remember/`, `.superpowers/` ปนอยู่ จับกรณี "ลืม commit ไฟล์" และ "พึ่งไฟล์ที่ gitignore"
 3. รายงานผลตาม output จริง ถ้า validate ไม่ผ่านให้แจ้งพร้อม output ห้ามสรุปว่าเสร็จ
 
 **ไม่ทำในรอบนี้:** `/plugin marketplace add ekayutdev/reusable-dev` ในเครื่องนี้ เพราะจะมี `reusable-dev` สองตัวจากสอง marketplace พร้อมกัน เสี่ยงชนกับตัวที่ใช้งานอยู่ — ทดสอบเส้นทางติดตั้งจริงในรอบ M1–M7 ซึ่งรันในสภาพแวดล้อมแยกอยู่แล้ว
