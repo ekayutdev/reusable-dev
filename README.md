@@ -64,7 +64,8 @@ Config อยู่ที่ `.claude/reusable-dev.md` (commit ลง git เพ
 ## พัฒนา / Development
 
 ```bash
-claude plugin validate . --strict
+claude plugin validate .claude-plugin/plugin.json --strict
+claude plugin validate .claude-plugin/marketplace.json --strict
 evals/lib/run-eval.sh [flags]
 ```
 
