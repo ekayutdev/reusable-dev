@@ -41,29 +41,21 @@ Stack อื่นใช้หลักการทั่วไปได้ แ�
 
 ## ติดตั้ง / Install
 
-ติดตั้งจาก git: repo นี้ทั้งตัวคือ plugin (`evals/` และ `docs/` อยู่ใน repo แต่ Claude Code ไม่ได้โหลด)
+```bash
+claude plugin marketplace add ekayutdev/reusable-dev
+claude plugin install reusable-dev@reusable-dev
+```
+
+หรือพิมพ์ `/plugin marketplace add ekayutdev/reusable-dev` แล้ว `/plugin install reusable-dev@reusable-dev` ใน session — repo นี้เป็น marketplace ในตัว ชื่อ marketplace กับชื่อ plugin จึงเหมือนกัน
+
+สำหรับ dev หรือทดสอบ (โหลดจากโฟลเดอร์ ไม่ผ่าน marketplace):
 
 ```bash
-git clone <repo-url> && claude --plugin-dir <clone-path>
+git clone https://github.com/ekayutdev/reusable-dev
+claude --plugin-dir reusable-dev
 ```
 
-ผ่าน marketplace: ต้องมี repo นี้อยู่ที่ `<marketplace-root>/plugins/reusable-dev` (copy หรือ symlink) แล้วเพิ่ม entry ใน `plugins` array ของ `.claude-plugin/marketplace.json` ของ marketplace ที่ใช้ — snippet นี้คือเฉพาะ object ของ entry ใน `plugins` array:
-
-```json
-{
-  "name": "reusable-dev",
-  "source": "./plugins/reusable-dev",
-  "description": "Reuse-first development for full-stack apps",
-  "version": "0.1.0"
-}
-```
-
-แล้วรันตามลำดับ:
-
-```bash
-claude plugin marketplace add <path-or-git-url-of-marketplace>
-claude plugin install reusable-dev@<marketplace-name>
-```
+repo นี้ทั้งตัวคือ plugin — `evals/` และ `docs/` อยู่ใน repo แต่ Claude Code ไม่ได้โหลด
 
 ## Config และ permission / Config & permissions
 
