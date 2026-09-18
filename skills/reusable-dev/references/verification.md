@@ -18,6 +18,8 @@ Report only what you ran, with the real result. A tier with no command is `skipp
 3. For each caller, run its tests: colocated `*.test.*`, `*.spec.*`, `__tests__/`, Python `test_*.py`, `*_test.py`, `tests.py`, `tests/`, Rust inline `#[cfg(test)]` modules or `tests/*.rs`, Swift `Tests/<Target>Tests/`, PHP `tests/**/*Test.php`, C# `tests/*.Tests/`. If the test runner cannot target files, run the full `commands.test` once.
 4. Caller with no test → list it under Notes as `untested call site: <path>`.
 
+Only step 3 needs a test command. With `commands.test` empty, T3 still reports `skipped (no command)` — but steps 1, 2 and 4 are reading, not running: find the call sites and list every untested one anyway. A tier with no command is a tier whose *command* was skipped, never a licence to skip the bookkeeping around it.
+
 ## Report format
 
 ```
