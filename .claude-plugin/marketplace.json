@@ -9,7 +9,7 @@
     {
       "name": "reusable-dev",
       "source": "./",
-      "description": "Reuse-first development for full-stack apps: find existing components and functions before writing new ones, design them for reuse, keep a registry, and verify changes including call sites. 11 stacks; stack-agnostic with optional extension points for other skills.",
+      "description": "Reuse-first development for full-stack apps: find existing components and functions before writing new ones, design them for reuse, keep a registry, and verify changes including call sites. 12 stacks; stack-agnostic with optional extension points for other skills.",
       "category": "development"
     }
   ]

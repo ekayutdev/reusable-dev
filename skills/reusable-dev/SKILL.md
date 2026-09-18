@@ -1,6 +1,6 @@
 ---
 name: reusable-dev
-description: Use when about to create, modify, refactor, or extract a UI component, hook/composable, store, function, utility, service, or module in an application codebase, or when writing a design or implementation plan whose tasks will. Typical requests - add a button/modal/form, new helper or hook, change a component's props, refactor or move code into shared, duplicate code, reuse. Thai phrasing - สร้าง component, แก้ component, เขียน function, แก้ฟังก์ชัน, เพิ่มปุ่ม, เพิ่มหน้า, เพิ่มฟีเจอร์, refactor, รีแฟกเตอร์, แยก component, ย้ายไป shared, โค้ดซ้ำ, ใช้ซ้ำ, วางแผนงาน. Not for docs-only edits (README, markdown), config-only edits (package.json, .env, YAML/JSON, CI), questions that change no code, or other non-code edits.
+description: Use when about to create, modify, refactor, or extract a UI component, hook/composable, store, function, utility, service, or module in an application codebase, or when writing a design or implementation plan whose tasks will create or change such code. Typical requests - add a button/modal/form, new helper or hook, change a component's props, refactor or move code into shared, duplicate code, reuse. Thai phrasing - สร้าง component, แก้ component, เขียน function, แก้ฟังก์ชัน, เพิ่มปุ่ม, เพิ่มหน้า, เพิ่มฟีเจอร์, refactor, รีแฟกเตอร์, แยก component, ย้ายไป shared, โค้ดซ้ำ, ใช้ซ้ำ, วางแผนงาน. Not for docs-only edits (README, markdown), config-only edits (package.json, .env, YAML/JSON, CI), questions that change no code, or other non-code edits.
 ---
 
 # Reusable Dev
