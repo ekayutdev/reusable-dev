@@ -62,7 +62,7 @@ Reuse decision: <Reuse|Extend|Compose|Create> <unit> (<path>) — <one-line why>
 Verified: T1 <result> · T2 <result> · T3 <result>
 Notes: <fallbacks, skipped tiers, stale registry, missing config — or none>
 ```
-Tier result: counts with ✓, `skipped (no command)`, `n/a (<reason>)`, `could not run (<error>)`, or the failure (`references/verification.md`). Missing config note is exactly `config not saved — run /reusable-dev:reuse-setup`.
+Tier result: counts with ✓, `skipped (no command)`, `n/a (<reason>)`, `could not run (<error>)`, or the failure (`references/verification.md`). The Notes entries the references define are exact strings, one per occurrence — `config not saved — run /reusable-dev:reuse-setup`, `skill <name> not installed → fallback` (per skill, named as configured), `untested call site: <path>` (per caller), `test written but not run`. Prose that means the same thing is not the same: these are read by graders and by the next session, so rewording them in your own words loses the signal.
 One `Reuse decision:` line per unit touched.
 Changing an existing unit without an API change: `Reuse decision: Reuse <unit> (<path>) — internal change, API unchanged`; Discover is limited to its call sites.
 
