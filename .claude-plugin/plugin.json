@@ -1,6 +1,6 @@
 {
   "name": "reusable-dev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reuse-first development for full-stack apps: find existing components and functions before writing new ones, design them for reuse, keep a registry, and verify changes including call sites. Stack-agnostic with optional extension points for other skills.",
   "author": { "name": "ekayut" },
   "homepage": "https://github.com/ekayutdev/reusable-dev",
