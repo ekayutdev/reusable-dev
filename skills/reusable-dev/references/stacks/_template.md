@@ -1,3 +1,7 @@
+<!-- researched <YYYY-MM-DD>: <what was read> (<sources>) -->
+
+First line of every stack file, and the only place its freshness is recorded. `<what was read>` is `pkg@version` for anything with a package version (`next@16.3.5, react@19.3.0`), or the release band or platform name when there is none (`ASP.NET Core 8/9/10`, `SwiftUI`). `<sources>` are the doc paths actually read, comma-separated, not a bare domain. Keep it one line and drop this paragraph when you copy the template. A file written from a project's own conventions rather than from documentation says so instead — `<!-- not researched: written from project conventions on <YYYY-MM-DD> -->` — because a `researched` line is a claim that those pages were read.
+
 # Stack: <name>
 
 ## Detection
