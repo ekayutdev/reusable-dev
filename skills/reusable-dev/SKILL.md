@@ -21,13 +21,14 @@ Read `.claude/reusable-dev.md`. Missing → follow "Missing config" in `referenc
 2. Confirm each hit's path exists. Missing → Notes: `registry stale — run /reusable-dev:reuse-registry --sync`.
 3. Grep `shared_paths` and the source roots for the project's language (`references/config-format.md` → "Source roots by language") for the same terms and for similar function bodies or prop names. Duplicates inside feature folders count.
 4. `ui_lib` set → check its primitives directory, then its CLI registry (`references/ui-libs/<ui_lib>.md`).
+5. For any candidate that sits inside a feature folder, check who imports it. Imported only from its own folder → a copy. Imported by another feature too → a shared unit that was never moved.
 
 ### 2. Decide
 Pick the FIRST option that works, and say why earlier options do not:
 1. **Reuse** — use the existing unit as is.
 2. **Extend** — add an optional prop/parameter (or variant) with a default; existing call sites unchanged.
 3. **Compose** — build a new unit from existing ones.
-4. **Create** — new unit. First or second use → feature folder. Third use (two copies found, a third needed) → extract to shared, replace every copy, report as Create with "third use" (Rule of Three). A unit inside another feature folder is a copy, never a Reuse target.
+4. **Create** — new unit. First or second use → feature folder. Third use (two copies found, a third needed) → extract to shared, replace every copy, report as Create with "third use" (Rule of Three). A unit inside another feature folder is a copy, never a Reuse target — unless other features already import it, which makes it shared in placement only: Reuse it and add `misplaced shared unit: <path> — imported by <n> features` to Notes. Moving it is its own change, not a rider on this work.
 - User explicitly names where the unit goes → follow it; if that breaks the Rule of Three, add a `Notes:` line saying so.
 - A finding the user picked from `/reusable-dev:reuse-audit` may extract two identical copies to shared now (report as Create — audit request).
 
