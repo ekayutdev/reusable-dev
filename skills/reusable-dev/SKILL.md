@@ -49,6 +49,8 @@ Created a shared unit or changed a shared API → update its registry row (`refe
 
 Writing a design or implementation plan (with any planning skill or none): do Discover + Decide for each task and put a `Reuse decision:` line in every task that creates or changes code. Implementers who never load this skill still see it.
 
+End the plan with a final task — not a closing template — whose steps are: collect the tasks' `Reuse decision:` lines, run the verification ladder over every shared unit the plan changed, and print the report block. An executor works the task list and skips prose after the last task, so a report that lives in the tail is a report that ships when the executor happens to read that far.
+
 ## When delegating the code work
 
 Dispatching subagents, another CLI, or any worker to write the code does not transfer the report. Collect each task's `Reuse decision:` from the plan or the briefs you handed out, run the verification ladder yourself after the last task lands (a worker's test run is a claim, not a result), and end with the block below. "I only coordinated" is not an exemption.
