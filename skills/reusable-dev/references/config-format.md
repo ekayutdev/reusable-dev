@@ -35,6 +35,9 @@ Use the first row that matches, top to bottom.
 
 Backend and native frameworks (rows 4–9) come before bare UI-library deps (row 10) and generic package.json rows (11–12) because those projects often keep a package.json only for asset tooling (Vite, Tailwind).
 
+Rows 7 and 8 are deliberately narrow: a framework sitting in one corner of a repo is not the repo's stack. When axum appears only under `examples/`, `benches/` or vendored sources, or the SwiftUI code is a widget extension inside a React Native or Flutter app, do not label the whole repo — map the part that is that stack:
+`stack: { "crates/api": rust-axum }`, `stack: { "ios/Widgets": swiftui, "src": react-next }`. The rest of the repo then matches on its own signals.
+
 | # | Signal | Value |
 |---|---|---|
 | 1 | `next.config.*` or `"next"` in package.json deps | `stack: react-next` |
@@ -43,9 +46,10 @@ Backend and native frameworks (rows 4–9) come before bare UI-library deps (row
 | 4 | `manage.py`, or `django` in `pyproject.toml` / `requirements*.txt` | `stack: django` |
 | 5 | `fastapi` in `pyproject.toml` / `requirements*.txt` | `stack: fastapi` |
 | 6 | `artisan`, or `laravel/framework` in `composer.json` | `stack: laravel` |
-| 7 | `axum` in any `Cargo.toml` in the repo (root, member, or excluded crate) | `stack: rust-axum` |
-| 8 | `Package.swift` or `*.xcodeproj` present and `import SwiftUI` in a source file | `stack: swiftui` |
+| 7 | `axum` in the root `Cargo.toml`, or in a crate listed in `workspace.members` or `workspace.exclude` (an excluded crate is still part of the project — often excluded to keep tests offline). Not from `examples/`, `benches/`, or vendored sources | `stack: rust-axum` |
+| 8 | `Package.swift` or `*.xcodeproj` present and `import SwiftUI` in a source file — and no root `pubspec.yaml` and no `react-native` / `expo` in a root package.json | `stack: swiftui` |
 | 9 | `*.sln` / `*.slnx` at the root, or `*.csproj` at the root, in `*/` or in `src/*/` — and at least one `*.csproj` in the repo | `stack: dotnet` |
+| 9b | `*.fsproj` in the repo and no `*.csproj` | `stack: fsharp` (ecosystem name, no reference file) |
 | 10 | `"react"` in deps without next → `stack: react-next`; `"vue"` in deps without nuxt → `stack: vue-nuxt` | see signal |
 | 11 | `"@nestjs/core"` in deps or `nest-cli.json` | `stack: nestjs` |
 | 12 | package.json with another server framework (`express`, `fastify`, `hono`) or no UI framework, and no `pyproject.toml` / `requirements*.txt` / `setup.py` / `composer.json` / `Cargo.toml` / `Package.swift` / `*.sln` / `*.slnx` / `*.csproj` at the same level (tsconfig.json optional) | `stack: node-ts` |
